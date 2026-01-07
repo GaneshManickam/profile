@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Ganesh Manickam | Portfolio',
+      title: 'Ganesh Manickam, iOS Lead | Portfolio',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
@@ -28,6 +28,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
 
 // --- Portfolio Home Page ---
 class PortfolioHomePage extends StatelessWidget {
@@ -94,6 +96,8 @@ class PortfolioHomePage extends StatelessWidget {
   }
 }
 
+
+
 // --- 1. Liquid Background Logic ---
 class LiquidBackground extends StatelessWidget {
   const LiquidBackground({super.key});
@@ -142,6 +146,8 @@ class LiquidBackground extends StatelessWidget {
   }
 }
 
+
+
 class _AnimatedBlob extends StatelessWidget {
   final Color color;
   final double size;
@@ -186,12 +192,16 @@ class _AnimatedBlob extends StatelessWidget {
   }
 }
 
+
+
 // --- 2. Glass Container (Core UI Component) ---
 class GlassContainer extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
   final double borderRadius;
   final Color? color;
+  final double? width;
+  final double? height;
 
   const GlassContainer({
     super.key,
@@ -199,6 +209,8 @@ class GlassContainer extends StatelessWidget {
     this.padding = const EdgeInsets.all(24),
     this.borderRadius = 24,
     this.color,
+    this.width,
+    this.height,
   });
 
   @override
@@ -208,6 +220,8 @@ class GlassContainer extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
         child: Container(
+          width: width,
+          height: height,
           padding: padding,
           decoration: BoxDecoration(
             color: (color ?? Colors.white).withOpacity(0.08),
@@ -224,6 +238,8 @@ class GlassContainer extends StatelessWidget {
   }
 }
 
+
+
 class GlassDivider extends StatelessWidget {
   const GlassDivider({super.key});
   @override
@@ -236,55 +252,85 @@ class GlassDivider extends StatelessWidget {
   }
 }
 
+
+
 // --- Hero Section ---
-class HeroSection extends StatelessWidget {
+// --- Hero Section ---
+class HeroSection extends StatefulWidget {
   const HeroSection({super.key});
+
+  @override
+  State<HeroSection> createState() => _HeroSectionState();
+}
+
+class _HeroSectionState extends State<HeroSection> {
+  AnimationController? _flipController;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         // Profile Image with Glow
-        Container(
-          width: 160,
-          height: 160,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withOpacity(0.2), width: 4),
-            image: const DecorationImage(
-              image: AssetImage('assets/profile.jpg'),
-              fit: BoxFit.cover,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF007AFF).withOpacity(0.4),
-                blurRadius: 30,
-                spreadRadius: 10,
+        GestureDetector(
+          onTap: () {
+            _flipController?.forward(from: 0);
+          },
+          child: Container(
+            width: 160,
+            height: 160,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white.withOpacity(0.2), width: 4),
+              image: const DecorationImage(
+                image: AssetImage('assets/profile.jpg'),
+                fit: BoxFit.cover,
               ),
-            ],
-          ),
-        ).animate().fadeIn(duration: 800.ms).scale(curve: Curves.easeOutBack),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF007AFF).withOpacity(0.4),
+                  blurRadius: 30,
+                  spreadRadius: 10,
+                ),
+              ],
+            ),
+          )
+          .animate(onInit: (controller) => _flipController = controller)
+          .flip(duration: 400.ms, direction: Axis.horizontal, curve: Curves.linear, begin: 0, end: 1)
+          .then()
+          .flip(duration: 600.ms, direction: Axis.horizontal, curve: Curves.linear, begin: 0, end: 1)
+          .then()
+          .flip(duration: 1000.ms, direction: Axis.horizontal, curve: Curves.easeOut, begin: 0, end: 1)
+          .animate()
+          .fadeIn(duration: 800.ms)
+          .scale(curve: Curves.easeOutBack),
+        ),
         
         const SizedBox(height: 24),
         
-        Text(
-          'Ganesh Manickam',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.displaySmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            letterSpacing: -0.5,
+        JellyButton(
+          onTap: () {},
+          child: Text(
+            'Ganesh Manickam',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              letterSpacing: -0.5,
+            ),
           ),
         ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.3, end: 0),
 
         const SizedBox(height: 8),
 
-        Text(
-          'TechLead-iOS | Mobile App Architect',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            color: Colors.white.withOpacity(0.7),
-            fontWeight: FontWeight.w300,
+        JellyButton(
+          onTap: () {},
+          child: Text(
+            'TechLead-iOS | Mobile App Architect',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: Colors.white.withOpacity(0.7),
+              fontWeight: FontWeight.w300,
+            ),
           ),
         ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.3, end: 0),
 
@@ -317,6 +363,8 @@ class HeroSection extends StatelessWidget {
   }
 }
 
+
+
 class _SocialButton extends StatelessWidget {
   final String label;
   final String url;
@@ -330,7 +378,7 @@ class _SocialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return JellyButton(
       onTap: () => launchUrl(Uri.parse(url)),
       borderRadius: BorderRadius.circular(50),
       child: GlassContainer(
@@ -354,6 +402,8 @@ class _SocialButton extends StatelessWidget {
     );
   }
 }
+
+
 
 // --- Section Title ---
 class SectionTitle extends StatelessWidget {
@@ -386,6 +436,7 @@ class AboutSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassContainer(
+      width: double.infinity,
       child: Text(
         'Results-driven Senior iOS Developer with $_calculatedExperience+ years of experience designing, developing, and deploying high-performance iOS apps and SDKs. Expert in Swift, Objective-C, SwiftUI, and architecture patterns like VIPER, MVVM, and MVC. Proven leader in optimizing app performance, integrating third-party SDKs, and mentoring teams. Delivered 15+ apps across domains including FinTech, E-Commerce, Health, and Streaming.',
         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -404,7 +455,7 @@ class SkillsSection extends StatelessWidget {
   final skills = const [
     'Swift', 'Objective-C', 'SwiftUI', 'UIKit', 'Flutter', 'Firebase',
     'Socket.IO', 'iOS', 'IoT', 'Bluetooth', 'GPS', 'HLS Streaming',
-    'SDK Development', 'SPM', 'KMM'
+    'SDK Development', 'SPM', 'KMM', 'Vibe Coding',
   ];
 
   @override
@@ -423,20 +474,26 @@ class _SkillChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GlassContainer(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      borderRadius: 12,
-      color: Colors.white.withOpacity(0.05),
-      child: Text(
-        label,
-        style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w500,
+    return JellyButton(
+      onTap: () {},
+      borderRadius: BorderRadius.circular(12),
+      child: GlassContainer(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        borderRadius: 12,
+        color: Colors.white.withOpacity(0.05),
+        child: Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );
   }
 }
+
+
 
 // --- Experience Section ---
 class ExperienceSection extends StatelessWidget {
@@ -503,6 +560,8 @@ class ExperienceSection extends StatelessWidget {
   }
 }
 
+
+
 class ExperienceCard extends StatelessWidget {
   final String title;
   final String role;
@@ -519,56 +578,62 @@ class ExperienceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GlassContainer(
-      child: Row(
-        children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              image: DecorationImage(
-                image: AssetImage(image),
-                fit: BoxFit.cover,
+    return JellyButton(
+      onTap: () {},
+      borderRadius: BorderRadius.circular(24),
+      child: GlassContainer(
+        child: Row(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                image: DecorationImage(
+                  image: AssetImage(image),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-                Text(
-                  role,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
-                    fontSize: 14,
+                  Text(
+                    role,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.7),
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  date,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.5),
-                    fontSize: 12,
+                  const SizedBox(height: 4),
+                  Text(
+                    date,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
+
+
 
 // --- Projects Section ---
 class ProjectsSection extends StatelessWidget {
@@ -635,6 +700,8 @@ class ProjectsSection extends StatelessWidget {
   }
 }
 
+
+
 class ProjectCard extends StatelessWidget {
   final String title;
   final String desc;
@@ -651,8 +718,9 @@ class ProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return JellyButton(
       onTap: () => launchUrl(Uri.parse(url)),
+      borderRadius: BorderRadius.circular(24), // Keep consitent with GlassContainer default
       child: GlassContainer(
         padding: const EdgeInsets.all(16),
         child: Stack(
@@ -697,6 +765,8 @@ class ProjectCard extends StatelessWidget {
   }
 }
 
+
+
 class FooterSection extends StatelessWidget {
   const FooterSection({super.key});
 
@@ -713,3 +783,65 @@ class FooterSection extends StatelessWidget {
     );
   }
 }
+
+// --- Jelly Button (Bouncy/Jelly Effect) ---
+class JellyButton extends StatefulWidget {
+  final Widget child;
+  final VoidCallback onTap;
+  final BorderRadius? borderRadius;
+
+  const JellyButton({
+    super.key,
+    required this.child,
+    required this.onTap,
+    this.borderRadius,
+  });
+
+  @override
+  State<JellyButton> createState() => _JellyButtonState();
+}
+
+class _JellyButtonState extends State<JellyButton> {
+  AnimationController? _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _controller?.forward(from: 0);
+        widget.onTap();
+      },
+      child: widget.child
+          .animate(onInit: (controller) => _controller = controller)
+          .scale(
+            duration: 200.ms,
+            begin: const Offset(1, 1),
+            end: const Offset(0.9, 0.9),
+            curve: Curves.easeInOut,
+          )
+          .then()
+          .scale(
+            duration: 200.ms,
+            begin: const Offset(0.9, 0.9),
+            end: const Offset(1.05, 1.05),
+            curve: Curves.easeInOut,
+          )
+          .then()
+          .scale(
+            duration: 200.ms,
+            begin: const Offset(1.05, 1.05),
+            end: const Offset(0.95, 0.95),
+            curve: Curves.easeInOut,
+          )
+          .then()
+          .scale(
+            duration: 200.ms,
+            begin: const Offset(0.95, 0.95),
+            end: const Offset(1, 1),
+            curve: Curves.easeInOut,
+          ),
+    );
+  }
+}
+
+
