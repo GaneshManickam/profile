@@ -1,6 +1,10 @@
+import 'dart:ui';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:google_fonts/google_fonts.dart'; // Import google_fonts
+import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 // --- Main App Setup ---
 void main() => runApp(const MyApp());
@@ -10,121 +14,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Define the retro pastel color scheme
-
-    final ColorScheme retroPastelScheme = ColorScheme.light(
-      primary: const Color(0xFF007AFF), // iOS System Blue
-      secondary: const Color(0xFF34C759), // iOS System Green
-      background: const Color(0xFFF2F2F7), // System Gray6 (very light gray)
-      surface: const Color(0xFFFFFFFF), // Pure white (used in cards and sheets)
-      onPrimary: Colors.white, // Text/icons on primary
-      onSecondary: Colors.white, // Text/icons on secondary
-      onBackground: const Color(0xFF1C1C1E), // System Gray1 (dark text)
-      onSurface: const Color(0xFF1C1C1E), // Text on white surfaces
-      error: const Color(0xFFFF3B30), // iOS System Red
-      onError: Colors.white,
-      brightness: Brightness.light,
-    );
-
     return MaterialApp(
       title: 'Ganesh Manickam | Portfolio',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: retroPastelScheme,
-        useMaterial3: true, // Keep M3 features but override styles
-        // Use a monospaced font for the retro tech feel
-        fontFamily: GoogleFonts.sourceCodePro().fontFamily,
-        scaffoldBackgroundColor: retroPastelScheme.background,
-        appBarTheme: AppBarTheme(
-          backgroundColor: retroPastelScheme.surface,
-          foregroundColor: retroPastelScheme.onSurface,
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: retroPastelScheme.primary,
-            foregroundColor: retroPastelScheme.onPrimary,
-            shape: RoundedRectangleBorder(
-              // Sharper corners for buttons
-              borderRadius: BorderRadius.circular(4),
-            ),
-            elevation: 2, // Reduced elevation
-          ),
-        ),
-        chipTheme: ChipThemeData(
-          backgroundColor: retroPastelScheme.secondary,
-          labelStyle: TextStyle(color: retroPastelScheme.onSecondary),
-          shape: RoundedRectangleBorder(
-            // Sharper corners for chips
-            borderRadius: BorderRadius.circular(4),
-          ),
-          side: BorderSide.none,
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        ),
-        cardTheme: CardTheme(
-          // Default card theme (though we override in BentoCard)
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-            side: BorderSide(
-              color: retroPastelScheme.primary.withOpacity(0.5),
-              width: 1,
-            ),
-          ),
-          color: retroPastelScheme.surface,
-        ),
-        textTheme: TextTheme(
-          // Ensure text uses the font
-          displayLarge: GoogleFonts.sourceCodePro(
-            color: retroPastelScheme.onBackground,
-          ),
-          displayMedium: GoogleFonts.sourceCodePro(
-            color: retroPastelScheme.onBackground,
-          ),
-          displaySmall: GoogleFonts.sourceCodePro(
-            color: retroPastelScheme.onBackground,
-          ),
-          headlineLarge: GoogleFonts.sourceCodePro(
-            color: retroPastelScheme.onBackground,
-            fontWeight: FontWeight.bold,
-          ),
-          headlineMedium: GoogleFonts.sourceCodePro(
-            color: retroPastelScheme.onBackground,
-            fontWeight: FontWeight.bold,
-          ),
-          headlineSmall: GoogleFonts.sourceCodePro(
-            color: retroPastelScheme.onBackground,
-            fontWeight: FontWeight.bold,
-          ),
-          titleLarge: GoogleFonts.sourceCodePro(
-            color: retroPastelScheme.onBackground,
-            fontWeight: FontWeight.bold,
-          ),
-          titleMedium: GoogleFonts.sourceCodePro(
-            color: retroPastelScheme.onSurface,
-          ),
-          titleSmall: GoogleFonts.sourceCodePro(
-            color: retroPastelScheme.onSurface,
-          ),
-          bodyLarge: GoogleFonts.sourceCodePro(
-            color: retroPastelScheme.onBackground,
-          ),
-          bodyMedium: GoogleFonts.sourceCodePro(
-            color: retroPastelScheme.onSurface,
-          ),
-          bodySmall: GoogleFonts.sourceCodePro(
-            color: retroPastelScheme.onSurface.withOpacity(0.8),
-          ),
-          labelLarge: GoogleFonts.sourceCodePro(
-            color: retroPastelScheme.onPrimary,
-            fontWeight: FontWeight.bold,
-          ), // For buttons
-          labelMedium: GoogleFonts.sourceCodePro(
-            color: retroPastelScheme.onSecondary,
-          ), // For chips
-          labelSmall: GoogleFonts.sourceCodePro(
-            color: retroPastelScheme.onBackground,
-          ),
-        ),
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: Colors.black,
+        primaryColor: const Color(0xFF007AFF),
+        textTheme: GoogleFonts.outfitTextTheme(ThemeData.dark().textTheme),
+        useMaterial3: true,
       ),
       home: const PortfolioHomePage(),
     );
@@ -138,37 +36,319 @@ class PortfolioHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24), // Slightly more padding
-        child: Center(
-          // Center content horizontally
-          child: ConstrainedBox(
-            // Limit max width for better readability on wide screens
-            constraints: const BoxConstraints(maxWidth: 1000),
-            child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.center, // Center align sections
-              children: [
-                const ProfileCard(),
-                const SizedBox(height: 32),
-                const HeroSection(),
-                const SizedBox(height: 32),
-                const SkillsAndAboutSection(),
-                const SizedBox(height: 40),
-                const SectionTitle(title: '// Experience'), // Add comment style
-                const SizedBox(height: 16),
-                const ExperienceSection(),
-                const SizedBox(height: 40),
-                const SectionTitle(
-                  title: '// Notable Projects',
-                ), // Add comment style
-                const SizedBox(height: 16),
-                const ProjectsSection(),
-                const SizedBox(height: 40),
-                const FooterSection(),
-              ],
+      extendBodyBehindAppBar: true,
+      body: Stack(
+        children: [
+          // 1. Animated Liquid Background
+          const LiquidBackground(),
+
+          // 2. Scrollable Content
+          SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: MediaQuery.of(context).padding.top + 24,
+            ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1000),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 20),
+                    const HeroSection(),
+                    const SizedBox(height: 48),
+                    
+                    // Glass Divider
+                    const GlassDivider(),
+                    const SizedBox(height: 48),
+
+                    const SectionTitle(title: 'About Me'),
+                    const SizedBox(height: 16),
+                    const AboutSection(),
+                    const SizedBox(height: 48),
+
+                    const SectionTitle(title: 'Skills'),
+                    const SizedBox(height: 16),
+                    const SkillsSection(),
+                    const SizedBox(height: 48),
+
+                    const SectionTitle(title: 'Experience'),
+                    const SizedBox(height: 16),
+                    const ExperienceSection(),
+                    const SizedBox(height: 48),
+
+                    const SectionTitle(title: 'Notable Projects'),
+                    const SizedBox(height: 16),
+                    const ProjectsSection(),
+                    
+                    const SizedBox(height: 60),
+                    const FooterSection(),
+                  ],
+                ),
+              ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+// --- 1. Liquid Background Logic ---
+class LiquidBackground extends StatelessWidget {
+  const LiquidBackground({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        // Dark base
+        Container(color: const Color(0xFF050510)),
+
+        // Animated Blobs
+        Positioned(
+          top: -100,
+          left: -100,
+          child: _AnimatedBlob(
+            color: const Color(0xFF007AFF).withOpacity(0.4),
+            size: 500,
+          ),
+        ),
+        Positioned(
+          bottom: -200,
+          right: -100,
+          child: _AnimatedBlob(
+            color: const Color(0xFFAF52DE).withOpacity(0.4),
+            size: 600,
+          ),
+        ),
+        Positioned(
+          top: 200,
+          right: -150,
+          child: _AnimatedBlob(
+            color: const Color(0xFF34C759).withOpacity(0.3),
+            size: 400,
+            duration: 6.seconds,
+          ),
+        ),
+        
+        // Overlay blur to mesh them together
+        BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
+          child: Container(color: Colors.transparent),
+        ),
+      ],
+    );
+  }
+}
+
+class _AnimatedBlob extends StatelessWidget {
+  final Color color;
+  final double size;
+  final Duration duration;
+
+  const _AnimatedBlob({
+    required this.color,
+    required this.size,
+    this.duration = const Duration(seconds: 5),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color,
+        boxShadow: [
+          BoxShadow(
+            color: color,
+            blurRadius: 100,
+            spreadRadius: 50,
+          ),
+        ],
+      ),
+    )
+    .animate(onPlay: (controller) => controller.repeat(reverse: true))
+    .scale(
+      begin: const Offset(1.0, 1.0),
+      end: const Offset(1.2, 1.2),
+      duration: duration,
+      curve: Curves.easeInOut,
+    )
+    .move(
+      begin: const Offset(0, 0),
+      end: const Offset(30, -30),
+      duration: duration,
+      curve: Curves.easeInOut,
+    );
+  }
+}
+
+// --- 2. Glass Container (Core UI Component) ---
+class GlassContainer extends StatelessWidget {
+  final Widget child;
+  final EdgeInsetsGeometry padding;
+  final double borderRadius;
+  final Color? color;
+
+  const GlassContainer({
+    super.key,
+    required this.child,
+    this.padding = const EdgeInsets.all(24),
+    this.borderRadius = 24,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+        child: Container(
+          padding: padding,
+          decoration: BoxDecoration(
+            color: (color ?? Colors.white).withOpacity(0.08),
+            borderRadius: BorderRadius.circular(borderRadius),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.1),
+              width: 1,
+            ),
+          ),
+          child: child,
+        ),
+      ),
+    );
+  }
+}
+
+class GlassDivider extends StatelessWidget {
+  const GlassDivider({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 1,
+      width: double.infinity,
+      color: Colors.white.withOpacity(0.1),
+    );
+  }
+}
+
+// --- Hero Section ---
+class HeroSection extends StatelessWidget {
+  const HeroSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Profile Image with Glow
+        Container(
+          width: 160,
+          height: 160,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white.withOpacity(0.2), width: 4),
+            image: const DecorationImage(
+              image: AssetImage('assets/profile.jpg'),
+              fit: BoxFit.cover,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF007AFF).withOpacity(0.4),
+                blurRadius: 30,
+                spreadRadius: 10,
+              ),
+            ],
+          ),
+        ).animate().fadeIn(duration: 800.ms).scale(curve: Curves.easeOutBack),
+        
+        const SizedBox(height: 24),
+        
+        Text(
+          'Ganesh Manickam',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            letterSpacing: -0.5,
+          ),
+        ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.3, end: 0),
+
+        const SizedBox(height: 8),
+
+        Text(
+          'TechLead-iOS | Mobile App Architect',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: Colors.white.withOpacity(0.7),
+            fontWeight: FontWeight.w300,
+          ),
+        ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.3, end: 0),
+
+        const SizedBox(height: 32),
+
+        Wrap(
+          spacing: 16,
+          runSpacing: 16,
+          alignment: WrapAlignment.center,
+          children: [
+            _SocialButton(
+              label: 'GitHub',
+              url: 'https://github.com/GaneshManickam',
+              icon: Icons.code,
+            ),
+            _SocialButton(
+              label: 'LinkedIn',
+              url: 'https://linkedin.com/in/ganeshmanickam',
+              icon: Icons.work,
+            ),
+            _SocialButton(
+              label: 'Stack Overflow',
+              url: 'https://stackoverflow.com/users/6540962/ganesh-manickam',
+              icon: Icons.question_answer,
+            ),
+          ],
+        ).animate().fadeIn(delay: 600.ms),
+      ],
+    );
+  }
+}
+
+class _SocialButton extends StatelessWidget {
+  final String label;
+  final String url;
+  final IconData icon;
+
+  const _SocialButton({
+    required this.label,
+    required this.url,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => launchUrl(Uri.parse(url)),
+      borderRadius: BorderRadius.circular(50),
+      child: GlassContainer(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        borderRadius: 50,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: Colors.white, size: 18),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -185,117 +365,35 @@ class SectionTitle extends StatelessWidget {
     return Text(
       title,
       style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-        color: Theme.of(context).colorScheme.primary, // Use primary color
-        // letterSpacing: 1.5, // Optional: Add letter spacing
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
       ),
-    );
+    ).animate().fadeIn().slideX(begin: -0.1, end: 0);
   }
 }
 
-// --- Hero Section ---
-class HeroSection extends StatelessWidget {
-  const HeroSection({super.key});
+// --- About Section ---
+class AboutSection extends StatelessWidget {
+  const AboutSection({super.key});
+
+  String get _calculatedExperience {
+    final startDate = DateTime(2016, 5); // May 2016
+    final now = DateTime.now();
+    final difference = now.difference(startDate).inDays / 365.25;
+    return difference.toStringAsFixed(1);
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Text styles from theme
-    final headlineStyle = Theme.of(context).textTheme.headlineLarge;
-    final subheadlineStyle = Theme.of(context).textTheme.titleLarge;
-
-    return Column(
-      // Keep column but center text within it
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          'Ganesh Manickam',
-          style: headlineStyle,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'TechLead-iOS | Mobile App Architect',
-          style: subheadlineStyle?.copyWith(
-            fontWeight: FontWeight.normal,
-          ), // Make subtitle slightly lighter
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 24),
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          alignment: WrapAlignment.center, // Center the wrap content
-          children: [
-            _socialButton('GitHub', 'https://github.com/GaneshManickam'),
-            _socialButton('LinkedIn', 'https://linkedin.com/in/ganeshmanickam'),
-            _socialButton(
-              'Stack Overflow',
-              'https://stackoverflow.com/users/6540962/ganesh-manickam',
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  // Use ElevatedButton with theme styling
-  Widget _socialButton(String label, String url) {
-    return ElevatedButton(
-      onPressed: () => launchUrl(Uri.parse(url)),
-      child: Text(label), // Theme handles text style via labelLarge
-    );
-  }
-}
-
-// --- Profile Card ---
-class ProfileCard extends StatelessWidget {
-  const ProfileCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      width: 160,
-      height: 160,
-      decoration: BoxDecoration(
-        // Make it slightly less round, more retro-boxy
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(8), // Small radius
-        image: const DecorationImage(
-          image: AssetImage(
-            'assets/profile.jpg',
-          ), // ENSURE THIS PATH IS CORRECT
-          fit: BoxFit.cover,
-        ),
-        // Replace shadow with border
-        border: Border.all(
-          color: colorScheme.primary, // Use primary color for border
-          width: 3, // Make border noticeable
+    return GlassContainer(
+      child: Text(
+        'Results-driven Senior iOS Developer with $_calculatedExperience+ years of experience designing, developing, and deploying high-performance iOS apps and SDKs. Expert in Swift, Objective-C, SwiftUI, and architecture patterns like VIPER, MVVM, and MVC. Proven leader in optimizing app performance, integrating third-party SDKs, and mentoring teams. Delivered 15+ apps across domains including FinTech, E-Commerce, Health, and Streaming.',
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          color: Colors.white.withOpacity(0.9),
+          height: 1.6,
         ),
       ),
-    );
-  }
-}
-
-// --- Skills And About Section ---
-class SkillsAndAboutSection extends StatelessWidget {
-  const SkillsAndAboutSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // Changed Wrap to Column
-    return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.stretch, // Make children fill width
-      children: const [
-        BentoCard(
-          title: '/* About Me */', // Comment style title
-          content:
-              'Results-driven Senior iOS Developer with 8+ years of experience designing, developing, and deploying high-performance iOS apps and SDKs. Expert in Swift, Objective-C, SwiftUI, and architecture patterns like VIPER, MVVM, and MVC. Proven leader in optimizing app performance, integrating third-party SDKs, and mentoring teams. Delivered 15+ apps across domains including FinTech, E-Commerce, Health, and Streaming.',
-        ),
-        SizedBox(height: 24), // Add vertical spacing between cards
-        SkillsSection(),
-      ],
-    );
+    ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1, end: 0);
   }
 }
 
@@ -306,25 +404,35 @@ class SkillsSection extends StatelessWidget {
   final skills = const [
     'Swift', 'Objective-C', 'SwiftUI', 'UIKit', 'Flutter', 'Firebase',
     'Socket.IO', 'iOS', 'IoT', 'Bluetooth', 'GPS', 'HLS Streaming',
-    'SDK Development', 'SPM', // Added a few more
+    'SDK Development', 'SPM', 'KMM'
   ];
 
   @override
   Widget build(BuildContext context) {
-    return BentoCard(
-      title: '/* Skills */', // Comment style title
-      contentWidget: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children:
-            skills
-                .map(
-                  (skill) => Chip(
-                    label: Text(skill),
-                    // Theme handles chip styling now
-                  ),
-                )
-                .toList(),
+    return Wrap(
+      spacing: 12,
+      runSpacing: 12,
+      children: skills.map((skill) => _SkillChip(label: skill)).toList(),
+    ).animate().fadeIn(delay: 200.ms);
+  }
+}
+
+class _SkillChip extends StatelessWidget {
+  final String label;
+  const _SkillChip({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassContainer(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      borderRadius: 12,
+      color: Colors.white.withOpacity(0.05),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
@@ -336,49 +444,128 @@ class ExperienceSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 24,
-      runSpacing: 24,
-      alignment: WrapAlignment.center,
-      children: const [
-        // Using a common card for consistency
-        InfoCard(
-          title: 'ZebPay',
-          subtitle: 'Senior Software Developer-2',
-          details: 'Sep 2023 - Present',
-          imageAsset: 'assets/zebpay_logo.jpeg', // Example icon
-        ),
-        InfoCard(
-          title: 'Jio Platforms Limited',
-          subtitle: 'SDE-3',
-          details: 'May 2021 - Sep 2023',
-          imageAsset: 'assets/jio_logo.jpeg',
-        ),
-        InfoCard(
-          title: 'Flexible Fitness Online Pvt Ltd',
-          subtitle: 'Tech Lead - iOS',
-          details: 'April 2020 - April 2021',
-          imageAsset: 'assets/auro_logo.png', // Example icon
-        ),
-        InfoCard(
-          title: 'Ailoitte Technologies',
-          subtitle: 'Senior iOS Developer',
-          details: 'Aug 2018 - April 2020',
-          imageAsset: 'assets/ailoitte_logo.jpeg', // Example icon
-        ),
-        InfoCard(
-          title: 'Socedge Technologies',
-          subtitle: 'iOS Developer',
-          details: 'June 2017 - Aug 2018',
-          imageAsset: 'assets/socedge_logo.jpeg', // Example icon
-        ),
-        InfoCard(
-          title: 'Red Web\nSolutions',
-          subtitle: 'iOS Developer',
-          details: 'May 2016 - May 2017',
-          imageAsset: 'assets/redweb_logo.png', // Example icon
-        ),
-      ],
+     return MasonryGridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: MediaQuery.of(context).size.width > 600 ? 2 : 1,
+      mainAxisSpacing: 16,
+      crossAxisSpacing: 16,
+      itemCount: 6,
+      itemBuilder: (context, index) {
+        final experiences = [
+          {
+            'title': 'ZebPay',
+            'role': 'Senior Software Developer-2',
+            'date': 'Sep 2023 - Present',
+            'image': 'assets/zebpay_logo.jpeg',
+          },
+          {
+            'title': 'Jio Platforms Limited',
+            'role': 'SDE-3',
+            'date': 'May 2021 - Sep 2023',
+            'image': 'assets/jio_logo.jpeg',
+          },
+          {
+            'title': 'Flexible Fitness Online',
+            'role': 'Tech Lead - iOS',
+            'date': 'April 2020 - April 2021',
+            'image': 'assets/auro_logo.png',
+          },
+          {
+            'title': 'Ailoitte Technologies',
+            'role': 'Senior iOS Developer',
+            'date': 'Aug 2018 - April 2020',
+            'image': 'assets/ailoitte_logo.jpeg',
+          },
+          {
+            'title': 'Socedge Technologies',
+            'role': 'iOS Developer',
+            'date': 'June 2017 - Aug 2018',
+            'image': 'assets/socedge_logo.jpeg',
+          },
+          {
+            'title': 'Red Web Solutions',
+            'role': 'iOS Developer',
+            'date': 'May 2016 - May 2017',
+            'image': 'assets/redweb_logo.png',
+          },
+        ];
+        
+        final exp = experiences[index];
+        return ExperienceCard(
+          title: exp['title']!,
+          role: exp['role']!,
+          date: exp['date']!,
+          image: exp['image']!,
+        ).animate().fadeIn(delay: (100 * index).ms).slideY(begin: 0.2, end: 0);
+      },
+    );
+  }
+}
+
+class ExperienceCard extends StatelessWidget {
+  final String title;
+  final String role;
+  final String date;
+  final String image;
+
+  const ExperienceCard({
+    super.key,
+    required this.title,
+    required this.role,
+    required this.date,
+    required this.image,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassContainer(
+      child: Row(
+        children: [
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              image: DecorationImage(
+                image: AssetImage(image),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  role,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.7),
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  date,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.5),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -392,136 +579,116 @@ class ProjectsSection extends StatelessWidget {
     final projects = [
       {
         'title': 'ZebPay',
-        'url':
-            'https://apps.apple.com/in/app/zebpay-buy-bitcoin-crypto/id944854686',
-        'desc':
-            'ZebPay is a user-friendly cryptocurrency exchange app for buying, selling, and trading various cryptocurrencies like Bitcoin and Ethereum. It suits both beginners and experienced traders with its intuitive interface.',
+        'desc': 'Crypto Exchange App for buying/selling Bitcoin & Ether.',
         'image': 'assets/zebpay_app_icon.png',
+        'url': 'https://apps.apple.com/in/app/zebpay-buy-bitcoin-crypto/id944854686',
       },
       {
         'title': 'AJIO',
-        'url':
-            'https://apps.apple.com/in/app/ajio-online-shopping-app/id1113425372',
-        'desc':
-            'AJIO is an online fashion and lifestyle shopping platform from Reliance Retail in India. It offers a wide selection of clothing, footwear, accessories, beauty products, gadgets, and home furnishings.',
+        'desc': 'Top fashion and lifestyle shopping platform by Reliance.',
         'image': 'assets/ajio_app_icon.png',
+        'url': 'https://apps.apple.com/in/app/ajio-online-shopping-app/id1113425372',
       },
       {
         'title': 'Auro',
-        'url':
-            'https://apps.apple.com/gb/app/auro-home-outdoor-workouts/id1200805964',
-        'desc':
-            'Auro provides audio-guided fitness workouts for various activities and goals, led by expert trainers. Exercise at home, outdoors, or in the gym without constant screen monitoring. Integrates with music and wearables.',
+        'desc': 'Audio-guided fitness workouts for home & outdoors.',
         'image': 'assets/auro_app_icon.jpg',
+        'url': 'https://apps.apple.com/gb/app/auro-home-outdoor-workouts/id1200805964',
       },
       {
-        'title': 'Fullerton Markets',
-        'url': 'https://apps.apple.com/us/app/fullerton-markets/id1458847859',
-        'desc':
-            'Fullerton Markets offers an iOS app for enhanced trading on iPhones and iPads. It features an intuitive interface, fast deposit/withdrawal, real-time market alerts, news, and convenient document uploads.',
+        'title': 'Fullerton',
+        'desc': 'Enhanced trading app for global markets.',
         'image': 'assets/fullerton_app_icon.png',
+        'url': 'https://apps.apple.com/us/app/fullerton-markets/id1458847859',
       },
       {
         'title': 'Cakap',
-        'url':
-            'https://apps.apple.com/us/app/cakap-online-language-learning/id1434645453',
-        'desc':
-            'Cakap is an online language learning platform connecting Indonesian students with native teachers for English and other languages via video calls. It offers live one-on-one and group classes for all levels.',
+        'desc': 'Live language learning with native teachers.',
         'image': 'assets/cakap_app_icon.png',
+        'url': 'https://apps.apple.com/us/app/cakap-online-language-learning/id1434645453',
       },
       {
         'title': 'SOS Method',
-        'url':
-            'https://apps.apple.com/in/app/sos-method-stress-anxiety/id1363278866',
-        'desc':
-            'SOSmethod helps users manage stress, anxiety, depression, and trauma by addressing "Generational Trauma." It offers programs and meditations using music, tones, and words for inner well-being.',
+        'desc': 'Mindfulness app for stress and anxiety relief.',
         'image': 'assets/sos_method_app_icon.png',
+        'url': 'https://apps.apple.com/in/app/sos-method-stress-anxiety/id1363278866',
       },
     ];
 
-    return Wrap(
-      spacing: 24,
-      runSpacing: 24,
-      alignment: WrapAlignment.center,
-      children:
-          projects
-              .map(
-                (project) => ProjectCard(
-                  title: project['title'] as String,
-                  link: project['url'] as String,
-                  description: project['desc'] as String,
-                  imageAsset: project['image'] as String?, // Pass icon
-                ),
-              )
-              .toList(),
+    return MasonryGridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
+      mainAxisSpacing: 16,
+      crossAxisSpacing: 16,
+      itemCount: projects.length,
+      itemBuilder: (context, index) {
+        final project = projects[index];
+        return ProjectCard(
+          title: project['title']!,
+          desc: project['desc']!,
+          image: project['image']!,
+          url: project['url']!,
+        ).animate().fadeIn(delay: (100 * index).ms).scale(begin: const Offset(0.9, 0.9));
+      },
     );
   }
 }
 
-// --- Project Card --- (Modified to look similar to InfoCard/Bento)
 class ProjectCard extends StatelessWidget {
   final String title;
-  final String description;
-  final String link;
-  final IconData? icon; // Optional icon
-  final String? imageAsset; // Optional asset image
+  final String desc;
+  final String image;
+  final String url;
 
   const ProjectCard({
     super.key,
     required this.title,
-    required this.description,
-    required this.link,
-    this.icon,
-    this.imageAsset,
+    required this.desc,
+    required this.image,
+    required this.url,
   });
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
     return InkWell(
-      onTap: () => launchUrl(Uri.parse(link)),
-      child: Container(
-        width: 280,
-        height: 255,
+      onTap: () => launchUrl(Uri.parse(url)),
+      child: GlassContainer(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: colorScheme.surface,
-          borderRadius: BorderRadius.circular(4),
-          border: Border.all(color: colorScheme.primary, width: 1.5),
-        ),
         child: Stack(
           children: [
-            // Main content
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (imageAsset != null)
-                  SizedBox(
-                    height: 48,
-                    child: Image.asset(imageAsset!, fit: BoxFit.contain),
-                  )
-                else if (icon != null)
-                  Icon(icon, size: 48, color: colorScheme.primary),
-
-                const SizedBox(height: 12),
-                Text(title, style: textTheme.titleLarge),
-                const SizedBox(height: 4),
-                Text(description, style: textTheme.bodySmall),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.asset(image, height: 60, width: 60, fit: BoxFit.cover),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  desc,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.7),
+                    fontSize: 12,
+                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ],
             ),
-
-            // Positioned link icon at top-right
-            Positioned(
+            const Positioned(
               top: 0,
               right: 0,
-              child: IconButton(
-                icon: Icon(Icons.open_in_new, color: colorScheme.primary),
-                iconSize: 20,
-                tooltip: 'Open Project',
-                onPressed: () => launchUrl(Uri.parse(link)),
-              ),
+              child: Icon(Icons.apple, size: 25, color: Colors.white),
             ),
           ],
         ),
@@ -530,149 +697,18 @@ class ProjectCard extends StatelessWidget {
   }
 }
 
-// --- Bento Card (Base card style) ---
-class BentoCard extends StatelessWidget {
-  final String title;
-  final String? content;
-  final Widget? contentWidget;
-  final IconData? icon; // Optional icon
-
-  const BentoCard({
-    super.key,
-    required this.title,
-    this.content,
-    this.contentWidget,
-    this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return Container(
-      width: 300, // Keep consistent width or make responsive
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorScheme.surface, // Use surface color from theme
-        borderRadius: BorderRadius.circular(4), // Sharper corners
-        border: Border.all(
-          // Add border instead of shadow
-          color: colorScheme.primary, // Use primary color for border
-          width: 1.5,
-        ),
-        // Removed boxShadow
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            // Row for icon and title
-            children: [
-              if (icon != null) ...[
-                Icon(icon, color: colorScheme.primary, size: 24),
-                const SizedBox(width: 8),
-              ],
-              Expanded(
-                // Allow title to take remaining space
-                child: Text(
-                  title,
-                  style: textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12), // Increased spacing
-          if (content != null) Text(content!, style: textTheme.bodyMedium),
-          if (contentWidget != null) contentWidget!,
-        ],
-      ),
-    );
-  }
-}
-
-// --- Info Card (For Experience/Education) ---
-// Simplified card using the same styling principles as BentoCard
-class InfoCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final String details;
-  final IconData? icon; // Optional icon
-  final String? imageAsset; // Optional image asset path
-
-  const InfoCard({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    required this.details,
-    this.icon,
-    this.imageAsset,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return Container(
-      width: 280,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: colorScheme.primary, width: 1.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Display asset image if available, else fallback to icon
-          if (imageAsset != null)
-            SizedBox(
-              height: 48,
-              child: Image.asset(imageAsset!, fit: BoxFit.contain),
-            )
-          else if (icon != null)
-            Icon(icon, size: 48, color: colorScheme.primary),
-
-          const SizedBox(height: 12),
-          Text(title, style: textTheme.titleLarge),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: textTheme.titleMedium?.copyWith(
-              color: colorScheme.secondary,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(details, style: textTheme.bodySmall),
-        ],
-      ),
-    );
-  }
-}
-
-// --- Footer Section ---
 class FooterSection extends StatelessWidget {
   const FooterSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 24.0,
-      ), // More vertical padding
-      child: Text(
-        '// © ${DateTime.now().year} M. Ganesh Manickam. Built with Flutter. ✨',
-        style: textTheme.bodySmall?.copyWith(
-          color: colorScheme.onBackground.withOpacity(
-            0.7,
-          ), // Slightly faded text
-        ),
-        textAlign: TextAlign.center,
+    return Text(
+      '© ${DateTime.now().year} M. Ganesh Manickam. Built with Flutter. ✨',
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: Colors.white.withOpacity(0.3),
+        fontSize: 12,
+        letterSpacing: 1,
       ),
     );
   }
