@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Ganesh Manickam, iOS Lead | Portfolio',
+      title: 'Ganesh Manickam, Staff Engineer - iOS | Portfolio',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
@@ -28,8 +28,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
 
 // --- Portfolio Home Page ---
 class PortfolioHomePage extends StatelessWidget {
@@ -59,7 +57,7 @@ class PortfolioHomePage extends StatelessWidget {
                     const SizedBox(height: 20),
                     const HeroSection(),
                     const SizedBox(height: 48),
-                    
+
                     // Glass Divider
                     const GlassDivider(),
                     const SizedBox(height: 48),
@@ -82,7 +80,7 @@ class PortfolioHomePage extends StatelessWidget {
                     const SectionTitle(title: 'Notable Projects'),
                     const SizedBox(height: 16),
                     const ProjectsSection(),
-                    
+
                     const SizedBox(height: 60),
                     const FooterSection(),
                   ],
@@ -95,8 +93,6 @@ class PortfolioHomePage extends StatelessWidget {
     );
   }
 }
-
-
 
 // --- 1. Liquid Background Logic ---
 class LiquidBackground extends StatelessWidget {
@@ -135,7 +131,7 @@ class LiquidBackground extends StatelessWidget {
             duration: 6.seconds,
           ),
         ),
-        
+
         // Overlay blur to mesh them together
         BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
@@ -145,8 +141,6 @@ class LiquidBackground extends StatelessWidget {
     );
   }
 }
-
-
 
 class _AnimatedBlob extends StatelessWidget {
   final Color color;
@@ -162,37 +156,31 @@ class _AnimatedBlob extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color,
-        boxShadow: [
-          BoxShadow(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
             color: color,
-            blurRadius: 100,
-            spreadRadius: 50,
+            boxShadow: [
+              BoxShadow(color: color, blurRadius: 100, spreadRadius: 50),
+            ],
           ),
-        ],
-      ),
-    )
-    .animate(onPlay: (controller) => controller.repeat(reverse: true))
-    .scale(
-      begin: const Offset(1.0, 1.0),
-      end: const Offset(1.2, 1.2),
-      duration: duration,
-      curve: Curves.easeInOut,
-    )
-    .move(
-      begin: const Offset(0, 0),
-      end: const Offset(30, -30),
-      duration: duration,
-      curve: Curves.easeInOut,
-    );
+        )
+        .animate(onPlay: (controller) => controller.repeat(reverse: true))
+        .scale(
+          begin: const Offset(1.0, 1.0),
+          end: const Offset(1.2, 1.2),
+          duration: duration,
+          curve: Curves.easeInOut,
+        )
+        .move(
+          begin: const Offset(0, 0),
+          end: const Offset(30, -30),
+          duration: duration,
+          curve: Curves.easeInOut,
+        );
   }
 }
-
-
 
 // --- 2. Glass Container (Core UI Component) ---
 class GlassContainer extends StatelessWidget {
@@ -226,10 +214,7 @@ class GlassContainer extends StatelessWidget {
           decoration: BoxDecoration(
             color: (color ?? Colors.white).withOpacity(0.08),
             borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.1),
-              width: 1,
-            ),
+            border: Border.all(color: Colors.white.withOpacity(0.1), width: 1),
           ),
           child: child,
         ),
@@ -237,8 +222,6 @@ class GlassContainer extends StatelessWidget {
     );
   }
 }
-
-
 
 class GlassDivider extends StatelessWidget {
   const GlassDivider({super.key});
@@ -251,8 +234,6 @@ class GlassDivider extends StatelessWidget {
     );
   }
 }
-
-
 
 // --- Hero Section ---
 // --- Hero Section ---
@@ -276,37 +257,58 @@ class _HeroSectionState extends State<HeroSection> {
             _flipController?.forward(from: 0);
           },
           child: Container(
-            width: 160,
-            height: 160,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white.withOpacity(0.2), width: 4),
-              image: const DecorationImage(
-                image: AssetImage('assets/profile.jpg'),
-                fit: BoxFit.cover,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF007AFF).withOpacity(0.4),
-                  blurRadius: 30,
-                  spreadRadius: 10,
+                width: 160,
+                height: 160,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.2),
+                    width: 4,
+                  ),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/profile.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF007AFF).withOpacity(0.4),
+                      blurRadius: 30,
+                      spreadRadius: 10,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          )
-          .animate(onInit: (controller) => _flipController = controller)
-          .flip(duration: 400.ms, direction: Axis.horizontal, curve: Curves.linear, begin: 0, end: 1)
-          .then()
-          .flip(duration: 600.ms, direction: Axis.horizontal, curve: Curves.linear, begin: 0, end: 1)
-          .then()
-          .flip(duration: 1000.ms, direction: Axis.horizontal, curve: Curves.easeOut, begin: 0, end: 1)
-          .animate()
-          .fadeIn(duration: 800.ms)
-          .scale(curve: Curves.easeOutBack),
+              )
+              .animate(onInit: (controller) => _flipController = controller)
+              .flip(
+                duration: 400.ms,
+                direction: Axis.horizontal,
+                curve: Curves.linear,
+                begin: 0,
+                end: 1,
+              )
+              .then()
+              .flip(
+                duration: 600.ms,
+                direction: Axis.horizontal,
+                curve: Curves.linear,
+                begin: 0,
+                end: 1,
+              )
+              .then()
+              .flip(
+                duration: 1000.ms,
+                direction: Axis.horizontal,
+                curve: Curves.easeOut,
+                begin: 0,
+                end: 1,
+              )
+              .animate()
+              .fadeIn(duration: 800.ms)
+              .scale(curve: Curves.easeOutBack),
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         JellyButton(
           onTap: () {},
           child: Text(
@@ -325,7 +327,7 @@ class _HeroSectionState extends State<HeroSection> {
         JellyButton(
           onTap: () {},
           child: Text(
-            'TechLead-iOS | Mobile App Architect',
+            'Staff Engineer - iOS | Mobile App Architect',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               color: Colors.white.withOpacity(0.7),
@@ -362,8 +364,6 @@ class _HeroSectionState extends State<HeroSection> {
     );
   }
 }
-
-
 
 class _SocialButton extends StatelessWidget {
   final String label;
@@ -403,8 +403,6 @@ class _SocialButton extends StatelessWidget {
   }
 }
 
-
-
 // --- Section Title ---
 class SectionTitle extends StatelessWidget {
   final String title;
@@ -438,7 +436,7 @@ class AboutSection extends StatelessWidget {
     return GlassContainer(
       width: double.infinity,
       child: Text(
-        'Results-driven Senior iOS Developer with $_calculatedExperience+ years of experience designing, developing, and deploying high-performance iOS apps and SDKs. Expert in Swift, Objective-C, SwiftUI, and architecture patterns like VIPER, MVVM, and MVC. Proven leader in optimizing app performance, integrating third-party SDKs, and mentoring teams. Delivered 15+ apps across domains including FinTech, E-Commerce, Health, and Streaming.',
+        'Results-driven Staff Engineer with $_calculatedExperience+ years of experience designing, developing, and deploying high-performance iOS apps and SDKs. Expert in Swift, Objective-C, SwiftUI, and architecture patterns like VIPER, MVVM, and MVC. Proven leader in optimizing app performance, integrating third-party SDKs, and mentoring teams. Delivered 15+ apps across domains including FinTech, E-Commerce, Health, and Streaming.',
         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
           color: Colors.white.withOpacity(0.9),
           height: 1.6,
@@ -453,9 +451,23 @@ class SkillsSection extends StatelessWidget {
   const SkillsSection({super.key});
 
   final skills = const [
-    'Swift', 'Objective-C', 'SwiftUI', 'UIKit', 'Flutter', 'Firebase',
-    'Socket.IO', 'iOS', 'IoT', 'Bluetooth', 'GPS', 'HLS Streaming',
-    'SDK Development', 'SPM', 'KMM', 'Vibe Coding',
+    'Swift',
+    'Objective-C',
+    'SwiftUI',
+    'UIKit',
+    'Flutter',
+    'Firebase',
+    'Socket.IO',
+    'iOS',
+    'IoT',
+    'Bluetooth',
+    'GPS',
+    'HLS Streaming',
+    'SDK Development',
+    'SPM',
+    'KMM',
+    'CMP',
+    'Vibe Coding',
   ];
 
   @override
@@ -493,61 +505,65 @@ class _SkillChip extends StatelessWidget {
   }
 }
 
-
-
 // --- Experience Section ---
 class ExperienceSection extends StatelessWidget {
   const ExperienceSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-     return MasonryGridView.count(
+    final experiences = const [
+      {
+        'title': 'ZebPay',
+        'role': 'Staff Engineer',
+        'date': 'July 2026 - Present',
+        'image': 'assets/zebpay_logo.jpeg',
+      },
+      {
+        'title': 'ZebPay',
+        'role': 'Senior Software Developer-2',
+        'date': 'Sep 2023 - June 2026',
+        'image': 'assets/zebpay_logo.jpeg',
+      },
+      {
+        'title': 'Jio Platforms Limited',
+        'role': 'SDE-3',
+        'date': 'May 2021 - Sep 2023',
+        'image': 'assets/jio_logo.jpeg',
+      },
+      {
+        'title': 'Flexible Fitness Online',
+        'role': 'Tech Lead - iOS',
+        'date': 'April 2020 - April 2021',
+        'image': 'assets/auro_logo.png',
+      },
+      {
+        'title': 'Ailoitte Technologies',
+        'role': 'Senior iOS Developer',
+        'date': 'Aug 2018 - April 2020',
+        'image': 'assets/ailoitte_logo.jpeg',
+      },
+      {
+        'title': 'Socedge Technologies',
+        'role': 'iOS Developer',
+        'date': 'June 2017 - Aug 2018',
+        'image': 'assets/socedge_logo.jpeg',
+      },
+      {
+        'title': 'Red Web Solutions',
+        'role': 'iOS Developer',
+        'date': 'May 2016 - May 2017',
+        'image': 'assets/redweb_logo.png',
+      },
+    ];
+
+    return MasonryGridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: MediaQuery.of(context).size.width > 600 ? 2 : 1,
       mainAxisSpacing: 16,
       crossAxisSpacing: 16,
-      itemCount: 6,
+      itemCount: experiences.length,
       itemBuilder: (context, index) {
-        final experiences = [
-          {
-            'title': 'ZebPay',
-            'role': 'Senior Software Developer-2',
-            'date': 'Sep 2023 - Present',
-            'image': 'assets/zebpay_logo.jpeg',
-          },
-          {
-            'title': 'Jio Platforms Limited',
-            'role': 'SDE-3',
-            'date': 'May 2021 - Sep 2023',
-            'image': 'assets/jio_logo.jpeg',
-          },
-          {
-            'title': 'Flexible Fitness Online',
-            'role': 'Tech Lead - iOS',
-            'date': 'April 2020 - April 2021',
-            'image': 'assets/auro_logo.png',
-          },
-          {
-            'title': 'Ailoitte Technologies',
-            'role': 'Senior iOS Developer',
-            'date': 'Aug 2018 - April 2020',
-            'image': 'assets/ailoitte_logo.jpeg',
-          },
-          {
-            'title': 'Socedge Technologies',
-            'role': 'iOS Developer',
-            'date': 'June 2017 - Aug 2018',
-            'image': 'assets/socedge_logo.jpeg',
-          },
-          {
-            'title': 'Red Web Solutions',
-            'role': 'iOS Developer',
-            'date': 'May 2016 - May 2017',
-            'image': 'assets/redweb_logo.png',
-          },
-        ];
-        
         final exp = experiences[index];
         return ExperienceCard(
           title: exp['title']!,
@@ -559,8 +575,6 @@ class ExperienceSection extends StatelessWidget {
     );
   }
 }
-
-
 
 class ExperienceCard extends StatelessWidget {
   final String title;
@@ -633,8 +647,6 @@ class ExperienceCard extends StatelessWidget {
   }
 }
 
-
-
 // --- Projects Section ---
 class ProjectsSection extends StatelessWidget {
   const ProjectsSection({super.key});
@@ -646,19 +658,22 @@ class ProjectsSection extends StatelessWidget {
         'title': 'ZebPay',
         'desc': 'Crypto Exchange App for buying/selling Bitcoin & Ether.',
         'image': 'assets/zebpay_app_icon.png',
-        'url': 'https://apps.apple.com/in/app/zebpay-buy-bitcoin-crypto/id944854686',
+        'url':
+            'https://apps.apple.com/in/app/zebpay-buy-bitcoin-crypto/id944854686',
       },
       {
         'title': 'AJIO',
         'desc': 'Top fashion and lifestyle shopping platform by Reliance.',
         'image': 'assets/ajio_app_icon.png',
-        'url': 'https://apps.apple.com/in/app/ajio-online-shopping-app/id1113425372',
+        'url':
+            'https://apps.apple.com/in/app/ajio-online-shopping-app/id1113425372',
       },
       {
         'title': 'Auro',
         'desc': 'Audio-guided fitness workouts for home & outdoors.',
         'image': 'assets/auro_app_icon.jpg',
-        'url': 'https://apps.apple.com/gb/app/auro-home-outdoor-workouts/id1200805964',
+        'url':
+            'https://apps.apple.com/gb/app/auro-home-outdoor-workouts/id1200805964',
       },
       {
         'title': 'Fullerton',
@@ -670,13 +685,15 @@ class ProjectsSection extends StatelessWidget {
         'title': 'Cakap',
         'desc': 'Live language learning with native teachers.',
         'image': 'assets/cakap_app_icon.png',
-        'url': 'https://apps.apple.com/us/app/cakap-online-language-learning/id1434645453',
+        'url':
+            'https://apps.apple.com/us/app/cakap-online-language-learning/id1434645453',
       },
       {
         'title': 'SOS Method',
         'desc': 'Mindfulness app for stress and anxiety relief.',
         'image': 'assets/sos_method_app_icon.png',
-        'url': 'https://apps.apple.com/in/app/sos-method-stress-anxiety/id1363278866',
+        'url':
+            'https://apps.apple.com/in/app/sos-method-stress-anxiety/id1363278866',
       },
     ];
 
@@ -690,17 +707,18 @@ class ProjectsSection extends StatelessWidget {
       itemBuilder: (context, index) {
         final project = projects[index];
         return ProjectCard(
-          title: project['title']!,
-          desc: project['desc']!,
-          image: project['image']!,
-          url: project['url']!,
-        ).animate().fadeIn(delay: (100 * index).ms).scale(begin: const Offset(0.9, 0.9));
+              title: project['title']!,
+              desc: project['desc']!,
+              image: project['image']!,
+              url: project['url']!,
+            )
+            .animate()
+            .fadeIn(delay: (100 * index).ms)
+            .scale(begin: const Offset(0.9, 0.9));
       },
     );
   }
 }
-
-
 
 class ProjectCard extends StatelessWidget {
   final String title;
@@ -720,7 +738,9 @@ class ProjectCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return JellyButton(
       onTap: () => launchUrl(Uri.parse(url)),
-      borderRadius: BorderRadius.circular(24), // Keep consitent with GlassContainer default
+      borderRadius: BorderRadius.circular(
+        24,
+      ), // Keep consitent with GlassContainer default
       child: GlassContainer(
         padding: const EdgeInsets.all(16),
         child: Stack(
@@ -730,7 +750,12 @@ class ProjectCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(16),
-                  child: Image.asset(image, height: 60, width: 60, fit: BoxFit.cover),
+                  child: Image.asset(
+                    image,
+                    height: 60,
+                    width: 60,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -764,8 +789,6 @@ class ProjectCard extends StatelessWidget {
     );
   }
 }
-
-
 
 class FooterSection extends StatelessWidget {
   const FooterSection({super.key});
@@ -843,5 +866,3 @@ class _JellyButtonState extends State<JellyButton> {
     );
   }
 }
-
-
