@@ -173,9 +173,7 @@ class MeshGradientBackground extends StatelessWidget {
         ),
 
         // Dot grid overlay
-        Positioned.fill(
-          child: CustomPaint(painter: _DotGridPainter()),
-        ),
+        Positioned.fill(child: CustomPaint(painter: _DotGridPainter())),
       ],
     );
   }
@@ -197,16 +195,16 @@ class _AuroraOrb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: [color, Colors.transparent],
-          stops: const [0.0, 0.7],
-        ),
-      ),
-    )
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: RadialGradient(
+              colors: [color, Colors.transparent],
+              stops: const [0.0, 0.7],
+            ),
+          ),
+        )
         .animate(onPlay: (c) => c.repeat(reverse: true))
         .move(
           begin: Offset.zero,
@@ -220,9 +218,10 @@ class _AuroraOrb extends StatelessWidget {
 class _DotGridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = AppColors.border.withOpacity(0.25)
-      ..style = PaintingStyle.fill;
+    final paint =
+        Paint()
+          ..color = AppColors.border.withOpacity(0.25)
+          ..style = PaintingStyle.fill;
 
     const spacing = 48.0;
     const dotRadius = 0.6;
@@ -319,9 +318,10 @@ class GradientText extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShaderMask(
       blendMode: BlendMode.srcIn,
-      shaderCallback: (bounds) => AppColors.primaryGradient.createShader(
-        Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-      ),
+      shaderCallback:
+          (bounds) => AppColors.primaryGradient.createShader(
+            Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+          ),
       child: Text(text, style: style, textAlign: textAlign),
     );
   }
@@ -353,10 +353,10 @@ class SectionHeader extends StatelessWidget {
             Text(
               title,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: -0.5,
-                  ),
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.5,
+              ),
             ),
           ],
         ),
@@ -415,30 +415,30 @@ class _ProfileAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(3),
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: AppColors.primaryGradient,
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(3),
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: AppColors.background,
-        ),
-        child: Container(
-          width: 120,
-          height: 120,
+          padding: const EdgeInsets.all(3),
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
-            image: DecorationImage(
-              image: AssetImage('assets/profile.jpg'),
-              fit: BoxFit.cover,
+            gradient: AppColors.primaryGradient,
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(3),
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.background,
+            ),
+            child: Container(
+              width: 120,
+              height: 120,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: AssetImage('assets/profile.jpg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-    )
+        )
         .animate()
         .fadeIn(duration: 600.ms)
         .scale(
@@ -459,8 +459,7 @@ class _HeroContent extends StatelessWidget {
     final align =
         centered ? CrossAxisAlignment.center : CrossAxisAlignment.start;
     final textAlign = centered ? TextAlign.center : TextAlign.left;
-    final wrapAlign =
-        centered ? WrapAlignment.center : WrapAlignment.start;
+    final wrapAlign = centered ? WrapAlignment.center : WrapAlignment.start;
 
     return Column(
       crossAxisAlignment: align,
@@ -483,10 +482,10 @@ class _HeroContent extends StatelessWidget {
           text: 'Ganesh Manickam',
           textAlign: textAlign,
           style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                fontWeight: FontWeight.w800,
-                letterSpacing: -1,
-                height: 1.1,
-              ),
+            fontWeight: FontWeight.w800,
+            letterSpacing: -1,
+            height: 1.1,
+          ),
         ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1, end: 0),
 
         const SizedBox(height: 12),
@@ -508,10 +507,10 @@ class _HeroContent extends StatelessWidget {
                 'Staff Engineer - iOS | Mobile App Architect',
                 textAlign: textAlign,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: AppColors.textSecondary,
-                      fontWeight: FontWeight.w400,
-                      letterSpacing: 0.2,
-                    ),
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.2,
+                ),
               ),
             ),
           ],
@@ -524,13 +523,13 @@ class _HeroContent extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 8,
-              height: 8,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.accentGreen,
-              ),
-            )
+                  width: 8,
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.accentGreen,
+                  ),
+                )
                 .animate(onPlay: (c) => c.repeat(reverse: true))
                 .fade(begin: 0.4, end: 1.0, duration: 1500.ms),
             const SizedBox(width: 10),
@@ -656,10 +655,10 @@ class AboutSection extends StatelessWidget {
             'teams. Delivered 15+ apps across domains including FinTech, '
             'E-Commerce, Health, and Streaming.',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppColors.textSecondary,
-                  height: 1.7,
-                  letterSpacing: 0.2,
-                ),
+              color: AppColors.textSecondary,
+              height: 1.7,
+              letterSpacing: 0.2,
+            ),
           ),
         ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.05, end: 0),
       ],
@@ -726,6 +725,10 @@ class SkillsSection extends StatelessWidget {
       'CMP',
     ],
     'Domains': [
+      'FinTech',
+      'HealthTech',
+      'EduTech',
+      'E-Commerce',
       'iOS',
       'IoT',
       'Bluetooth',
@@ -733,14 +736,12 @@ class SkillsSection extends StatelessWidget {
       'HLS Streaming',
       'SDK Development',
     ],
-    'Methodologies': ['Vibe Coding'],
   };
 
   static const _categoryColors = <String, Color>{
     'Languages': AppColors.accentCyan,
     'Frameworks': AppColors.accentViolet,
     'Domains': AppColors.accentPink,
-    'Methodologies': AppColors.accentAmber,
   };
 
   @override
@@ -748,17 +749,18 @@ class SkillsSection extends StatelessWidget {
     int delayIndex = 0;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: _categories.entries.map((entry) {
-        final color = _categoryColors[entry.key] ?? AppColors.accentIndigo;
-        final delay = (delayIndex * 100).ms;
-        delayIndex++;
-        return _SkillCategory(
-          category: entry.key,
-          skills: entry.value,
-          color: color,
-          delay: delay,
-        );
-      }).toList(),
+      children:
+          _categories.entries.map((entry) {
+            final color = _categoryColors[entry.key] ?? AppColors.accentIndigo;
+            final delay = (delayIndex * 100).ms;
+            delayIndex++;
+            return _SkillCategory(
+              category: entry.key,
+              skills: entry.value,
+              color: color,
+              delay: delay,
+            );
+          }).toList(),
     );
   }
 }
@@ -796,9 +798,10 @@ class _SkillCategory extends StatelessWidget {
           Wrap(
             spacing: 10,
             runSpacing: 10,
-            children: skills
-                .map((skill) => _SkillTag(label: skill, color: color))
-                .toList(),
+            children:
+                skills
+                    .map((skill) => _SkillTag(label: skill, color: color))
+                    .toList(),
           ),
         ],
       ),
@@ -1016,10 +1019,7 @@ class ExperienceSection extends StatelessWidget {
               ),
             ],
           ),
-        )
-            .animate()
-            .fadeIn(delay: (80 * i).ms)
-            .slideY(begin: 0.05, end: 0);
+        ).animate().fadeIn(delay: (80 * i).ms).slideY(begin: 0.05, end: 0);
       }),
     );
   }
@@ -1037,9 +1037,10 @@ class _TimelineDot extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: isCurrent ? AppColors.accentIndigo : Colors.transparent,
-        border: isCurrent
-            ? null
-            : Border.all(color: AppColors.borderLight, width: 2),
+        border:
+            isCurrent
+                ? null
+                : Border.all(color: AppColors.borderLight, width: 2),
       ),
     );
 
@@ -1073,6 +1074,7 @@ class ProjectsSection extends StatelessWidget {
       'image': 'assets/zebpay_app_icon.png',
       'url':
           'https://apps.apple.com/in/app/zebpay-buy-bitcoin-crypto/id944854686',
+      'tags': ['iOS'],
     },
     {
       'title': 'AJIO',
@@ -1080,6 +1082,7 @@ class ProjectsSection extends StatelessWidget {
       'image': 'assets/ajio_app_icon.png',
       'url':
           'https://apps.apple.com/in/app/ajio-online-shopping-app/id1113425372',
+      'tags': ['iOS'],
     },
     {
       'title': 'Auro',
@@ -1087,12 +1090,14 @@ class ProjectsSection extends StatelessWidget {
       'image': 'assets/auro_app_icon.jpg',
       'url':
           'https://apps.apple.com/gb/app/auro-home-outdoor-workouts/id1200805964',
+      'tags': ['iOS'],
     },
     {
       'title': 'Fullerton',
       'desc': 'Enhanced trading app for global markets.',
       'image': 'assets/fullerton_app_icon.png',
       'url': 'https://apps.apple.com/us/app/fullerton-markets/id1458847859',
+      'tags': ['iOS'],
     },
     {
       'title': 'Cakap',
@@ -1100,6 +1105,7 @@ class ProjectsSection extends StatelessWidget {
       'image': 'assets/cakap_app_icon.png',
       'url':
           'https://apps.apple.com/us/app/cakap-online-language-learning/id1434645453',
+      'tags': ['iOS'],
     },
     {
       'title': 'SOS Method',
@@ -1107,6 +1113,15 @@ class ProjectsSection extends StatelessWidget {
       'image': 'assets/sos_method_app_icon.png',
       'url':
           'https://apps.apple.com/in/app/sos-method-stress-anxiety/id1363278866',
+      'tags': ['iOS'],
+    },
+    {
+      'title': 'Orca Media Player',
+      'desc': 'Privacy-focused offline video and audio player.',
+      'image': 'assets/orca_app_icon.png',
+      'url':
+          'https://play.google.com/store/apps/details?id=com.gapsen.orcaplayer',
+      'tags': ['Flutter', 'Android'],
     },
   ];
 
@@ -1122,16 +1137,29 @@ class ProjectsSection extends StatelessWidget {
       children: List.generate(_projects.length, (i) {
         final project = _projects[i];
         final isFeatured = i == 0 && isDesktop;
+        final rawTags = project['tags'];
+        final List<String> tags =
+            rawTags is List<String>
+                ? rawTags
+                : rawTags is List
+                ? rawTags.cast<String>()
+                : [
+                  if (project['platform'] != null)
+                    project['platform']! as String
+                  else
+                    'iOS',
+                ];
 
         return StaggeredGridTile.fit(
           crossAxisCellCount: isFeatured ? 2 : 1,
           child: _ProjectCard(
-            title: project['title']!,
-            desc: project['desc']!,
-            image: project['image']!,
-            url: project['url']!,
-            isFeatured: isFeatured,
-          )
+                title: project['title']! as String,
+                desc: project['desc']! as String,
+                image: project['image']! as String,
+                url: project['url']! as String,
+                tags: tags,
+                isFeatured: isFeatured,
+              )
               .animate()
               .fadeIn(delay: (80 * i).ms)
               .scale(
@@ -1150,6 +1178,7 @@ class _ProjectCard extends StatelessWidget {
   final String desc;
   final String image;
   final String url;
+  final List<String> tags;
   final bool isFeatured;
 
   const _ProjectCard({
@@ -1157,6 +1186,7 @@ class _ProjectCard extends StatelessWidget {
     required this.desc,
     required this.image,
     required this.url,
+    this.tags = const ['iOS'],
     this.isFeatured = false,
   });
 
@@ -1170,6 +1200,7 @@ class _ProjectCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // App icon
                 ClipRRect(
@@ -1181,35 +1212,18 @@ class _ProjectCard extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                const Spacer(),
-                // iOS platform badge
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: AppColors.border),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.apple,
-                        size: 14,
-                        color: AppColors.textTertiary,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        'iOS',
-                        style: GoogleFonts.jetBrainsMono(
-                          color: AppColors.textTertiary,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+                const SizedBox(width: 8),
+                // Platform badges
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Wrap(
+                      alignment: WrapAlignment.end,
+                      spacing: 6,
+                      runSpacing: 4,
+                      children:
+                          tags.map((t) => _PlatformBadge(tag: t)).toList(),
+                    ),
                   ),
                 ),
               ],
@@ -1239,6 +1253,122 @@ class _ProjectCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _PlatformBadge extends StatelessWidget {
+  final String tag;
+
+  const _PlatformBadge({required this.tag});
+
+  Widget _buildIcon(String tag) {
+    switch (tag.toLowerCase()) {
+      case 'flutter':
+        return const FlutterMonochromeIcon(
+          size: 13,
+          color: AppColors.textTertiary,
+        );
+      case 'android':
+        return const Icon(
+          Icons.android,
+          size: 13,
+          color: AppColors.textTertiary,
+        );
+      case 'ios':
+      default:
+        return const Icon(Icons.apple, size: 13, color: AppColors.textTertiary);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3.5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildIcon(tag),
+          const SizedBox(width: 4),
+          Text(
+            tag,
+            style: GoogleFonts.jetBrainsMono(
+              color: AppColors.textTertiary,
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FlutterMonochromeIcon extends StatelessWidget {
+  final double size;
+  final Color color;
+
+  const FlutterMonochromeIcon({
+    super.key,
+    this.size = 13,
+    this.color = AppColors.textTertiary,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CustomPaint(painter: _FlutterIconPainter(color)),
+    );
+  }
+}
+
+class _FlutterIconPainter extends CustomPainter {
+  final Color color;
+
+  const _FlutterIconPainter(this.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint =
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.fill;
+
+    canvas.save();
+    canvas.scale(size.width / 24.0, size.height / 24.0);
+
+    final path1 =
+        Path()
+          ..moveTo(14.314, 0)
+          ..lineTo(2.3, 12)
+          ..lineTo(6.0, 15.7)
+          ..lineTo(21.684, 0.013)
+          ..lineTo(14.327, 0.013)
+          ..close();
+
+    final path2 =
+        Path()
+          ..moveTo(14.328, 11.072)
+          ..lineTo(7.857, 17.53)
+          ..lineTo(14.327, 24.0)
+          ..lineTo(21.7, 24.0)
+          ..lineTo(15.24, 17.532)
+          ..lineTo(21.7, 11.072)
+          ..lineTo(14.33, 11.072)
+          ..close();
+
+    canvas.drawPath(path1, paint);
+    canvas.drawPath(path2, paint);
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(covariant _FlutterIconPainter oldDelegate) =>
+      oldDelegate.color != color;
 }
 
 // ============================================================================
