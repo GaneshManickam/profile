@@ -1,29 +1,29 @@
-# Liquid Glass UI Implementation & Optimization Walkthrough
+# 3D Portfolio Redesign — Walkthrough
 
-I have successfully updated the Profile app with an "Apple-style Liquid Glass" aesthetic and optimized it for web performance.
+## What changed
+- The single 1,400-line `main.dart` became a modular app:
+  - `theme/`: design tokens
+  - `data/`: models and content
+  - `core/`: motion utilities and the `Scene3D` perspective stage
+  - `widgets/`: reusable UI
+  - `sections/`: one file per section
+- New sections and visuals: the 3D phone hero, the 3D workspace in About, the
+  skill orbit, the scroll-driven timeline, the project coverflow, the lifecycle
+  pipeline with the isometric architecture stack, and the 3D contact phone.
+- A branded loading screen in `web/index.html` fades out on Flutter's
+  `flutter-first-frame` event.
+- Removed the unused `flutter_staggered_grid_view` dependency.
+- Assets are listed explicitly so the 870 KB favicon original is no longer
+  bundled. `orca_app_icon.png` was downscaled from 512 to 256 px (251 KB → 77 KB).
 
-## UI Overhaul (`lib/main.dart`)
-- **Theme**: Switched to a customized Dark Theme using `GoogleFonts.outfit`.
-- **Liquid Background**: Created a `LiquidBackground` widget with animated colored blobs.
-- **Glassmorphism**: Implemented `GlassContainer` with `BackdropFilter` for frosted glass cards.
-- **Animations**: Added sleek entry animations (fade in + slide up) using `flutter_animate`.
-- **Content**: Preserved all profile details, experience, and projects.
+## Content
+All existing content was carried over unchanged: profile, socials, skills, all
+7 roles with dates, and all 7 projects with their store links. Additions are
+limited to information derived from that content:
+- tenure, promotions and company count
+- domain labels taken from the project descriptions
+- "Architecture" skills taken from the summary (VIPER/MVVM/MVC) and Dart
+  (implied by the Flutter app)
 
-## Performance Optimization
-To address slow loading times, I optimized key assets:
-- **Favicon**: Reduced `web/favicon.png` from ~870KB to **~7.5KB**.
-- **Profile Image**: Reduced `assets/profile.jpg` from ~530KB to **~37KB**.
-- **Icons**: Compressed larger project icons (e.g., Fullerton, SOS Method) by ~50%.
-
-## Changes Made
-### 1. Dependencies
-- Added `flutter_animate` to `pubspec.yaml`.
-
-### 2. Web Configuration
-- Updated `web/favicon.png` with the custom logo.
-- Generated PWA icons (192x192, 512x512) in `web/icons/`.
-
-## Verification Results
-- **Compilation**: Code structure is valid Dart/Flutter.
-- **Asset Sizes**: Verified significant reduction in critical assets.
-- **Responsiveness**: Grid views adapt to screen width (2 columns for wide, 1 for mobile).
+Optional fields are left empty until real data is provided: resume, email, per-role
+highlights and screenshots.
