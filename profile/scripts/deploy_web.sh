@@ -16,7 +16,9 @@ cd "$ROOT"
 flutter pub get
 flutter analyze
 flutter test
-flutter build web --release --base-href "$BASE_HREF"
+# --wasm: Chrome/Edge/Firefox get the faster skwasm renderer; other
+# browsers automatically fall back to the JavaScript + CanvasKit build.
+flutter build web --release --wasm --base-href "$BASE_HREF"
 
 # Check out gh-pages in a throwaway worktree so the source branch is untouched.
 git fetch origin gh-pages

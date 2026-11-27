@@ -260,20 +260,18 @@ class _SkillOrbitState extends State<_SkillOrbit>
                             translation: const Offset(-0.5, -0.5),
                             child: Transform.scale(
                               scale: selected ? scale * 1.15 : scale,
-                              child: Opacity(
-                                opacity:
+                              child: _OrbitBadge(
+                                skill: skill,
+                                color: ring.category.color,
+                                selected: selected,
+                                fade:
                                     selected
                                         ? 1
                                         : (0.4 + (p.z + 1) * 0.3).clamp(
                                           0.0,
                                           1.0,
                                         ),
-                                child: _OrbitBadge(
-                                  skill: skill,
-                                  color: ring.category.color,
-                                  selected: selected,
-                                  onTap: () => widget.onSelect(skill),
-                                ),
+                                onTap: () => widget.onSelect(skill),
                               ),
                             ),
                           ),
@@ -289,7 +287,9 @@ class _SkillOrbitState extends State<_SkillOrbit>
                       top: center.dy,
                       child: FractionalTranslation(
                         translation: const Offset(-0.5, -0.5),
-                        child: _Core(size: mobile ? 76 : 104),
+                        child: RepaintBoundary(
+                          child: _Core(size: mobile ? 76 : 104),
+                        ),
                       ),
                     ),
                   ));
@@ -447,12 +447,17 @@ class _OrbitBadge extends StatefulWidget {
     required this.color,
     required this.selected,
     required this.onTap,
+    this.fade = 1,
   });
 
   final Skill skill;
   final Color color;
   final bool selected;
   final VoidCallback onTap;
+
+  /// Depth fade in [0, 1], applied to the colours directly (cheaper than
+  /// wrapping every badge in an Opacity layer each frame).
+  final double fade;
 
   @override
   State<_OrbitBadge> createState() => _OrbitBadgeState();
@@ -464,6 +469,7 @@ class _OrbitBadgeState extends State<_OrbitBadge> {
   @override
   Widget build(BuildContext context) {
     final active = widget.selected || _hover;
+    final f = active ? 1.0 : widget.fade;
     return Semantics(
       button: true,
       selected: widget.selected,
@@ -479,12 +485,18 @@ class _OrbitBadgeState extends State<_OrbitBadge> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(999),
-              color: Color.alphaBlend(
-                widget.color.withValues(alpha: active ? 0.22 : 0.1),
-                AppColors.surface,
+              color: Color.lerp(
+                AppColors.background,
+                Color.alphaBlend(
+                  widget.color.withValues(alpha: active ? 0.22 : 0.1),
+                  AppColors.surface,
+                ),
+                f,
               ),
               border: Border.all(
-                color: widget.color.withValues(alpha: active ? 0.9 : 0.35),
+                color: widget.color.withValues(
+                  alpha: (active ? 0.9 : 0.35) * f,
+                ),
               ),
               boxShadow:
                   active
@@ -500,7 +512,10 @@ class _OrbitBadgeState extends State<_OrbitBadge> {
               widget.skill.name,
               style: AppText.mono(
                 12,
-                color: active ? AppColors.textPrimary : widget.color,
+                color:
+                    active
+                        ? AppColors.textPrimary
+                        : widget.color.withValues(alpha: f),
                 weight: FontWeight.w600,
               ),
             ),

@@ -87,14 +87,19 @@ class _AboutContent extends StatelessWidget {
                 (p.appsShipped, 'Apps delivered'),
                 (p.domainsCount, 'Domains'),
               ];
-              const cols = 3;
-              final w = (c.maxWidth - (cols - 1) * 12) / cols;
-              return Wrap(
-                spacing: 12,
-                runSpacing: 12,
+              // Equal-width, equal-height cards on every screen size.
+              return Row(
                 children: [
-                  for (final s in stats)
-                    SizedBox(width: w, child: _Stat(value: s.$1, label: s.$2)),
+                  for (var i = 0; i < stats.length; i++) ...[
+                    if (i > 0) SizedBox(width: mobile ? 10 : 12),
+                    Expanded(
+                      child: _Stat(
+                        value: stats[i].$1,
+                        label: stats[i].$2,
+                        compact: mobile,
+                      ),
+                    ),
+                  ],
                 ],
               );
             },
@@ -205,25 +210,47 @@ class _Facet extends StatelessWidget {
 }
 
 class _Stat extends StatelessWidget {
-  const _Stat({required this.value, required this.label});
+  const _Stat({required this.value, required this.label, this.compact = false});
 
   final String value;
   final String label;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
     return TiltCard(
       borderRadius: 16,
-      child: GlassPanel(
-        radius: 16,
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            GradientText(value, style: AppText.display(30)),
-            const SizedBox(height: 6),
-            Text(label, style: AppText.mono(11)),
-          ],
+      child: SizedBox(
+        width: double.infinity,
+        height: compact ? 96 : 104,
+        child: GlassPanel(
+          radius: 16,
+          padding: EdgeInsets.symmetric(
+            vertical: compact ? 14 : 18,
+            horizontal: compact ? 12 : 16,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            // Top-aligned so the numbers line up even when a label wraps.
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: GradientText(
+                  value,
+                  style: AppText.display(compact ? 26 : 30),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                label,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: AppText.mono(compact ? 10 : 11).copyWith(height: 1.3),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -313,7 +340,9 @@ class _Workspace extends StatelessWidget {
                               child: PhoneFrame(
                                 width: phoneW,
                                 child: ProjectLaunchScreen(
-                                  project: PortfolioData.projects[2],
+                                  project: PortfolioData.projects.firstWhere(
+                                    (p) => p.title == 'Orca Media Player',
+                                  ),
                                 ),
                               ),
                             ),

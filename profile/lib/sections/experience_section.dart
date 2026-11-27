@@ -109,57 +109,67 @@ class _TimelineRow extends StatelessWidget {
     final e = experience;
     final railW = desktop ? 56.0 : 32.0;
 
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (desktop)
-            SizedBox(
-              width: 150,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 22),
-                child: Reveal(
-                  offset: const Offset(-16, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        e.isCurrent ? 'Now' : '${e.end!.year}',
-                        style: AppText.title(
-                          22,
-                          color:
-                              e.isCurrent
-                                  ? AppColors.cyan
-                                  : AppColors.textPrimary,
+    final dateW = desktop ? 150.0 : 0.0;
+    // The card sizes itself; the rail is a positioned overlay stretched to
+    // the row's real height. (IntrinsicHeight under-measured the expanded
+    // card, letting its content spill outside.)
+    return Stack(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (desktop)
+              SizedBox(
+                width: 150,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 22),
+                  child: Reveal(
+                    offset: const Offset(-16, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          e.isCurrent ? 'Now' : '${e.end!.year}',
+                          style: AppText.title(
+                            22,
+                            color:
+                                e.isCurrent
+                                    ? AppColors.cyan
+                                    : AppColors.textPrimary,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(_tenure(e), style: AppText.mono(11)),
-                    ],
+                        const SizedBox(height: 4),
+                        Text(_tenure(e), style: AppText.mono(11)),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            SizedBox(width: railW),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: isLast ? 0 : 16),
+                child: Reveal(
+                  offset: const Offset(24, 0),
+                  child: _ExperienceCard(
+                    experience: e,
+                    promoted: promoted,
+                    expanded: expanded,
+                    onToggle: onToggle,
                   ),
                 ),
               ),
             ),
-          SizedBox(
-            width: railW,
-            child: _RailSegment(isCurrent: e.isCurrent, isLast: isLast),
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: isLast ? 0 : 16),
-              child: Reveal(
-                offset: const Offset(24, 0),
-                child: _ExperienceCard(
-                  experience: e,
-                  promoted: promoted,
-                  expanded: expanded,
-                  onToggle: onToggle,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+          ],
+        ),
+        Positioned(
+          left: dateW,
+          top: 0,
+          bottom: 0,
+          width: railW,
+          child: _RailSegment(isCurrent: e.isCurrent, isLast: isLast),
+        ),
+      ],
     );
   }
 }
@@ -254,9 +264,9 @@ class _RailPainter extends CustomPainter {
         Offset(x, 0),
         Offset(x, fillY),
         Paint()
-          ..color = AppColors.cyan.withValues(alpha: 0.25)
-          ..strokeWidth = 8
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+          ..color = AppColors.cyan.withValues(alpha: 0.12)
+          ..strokeWidth = 6
+          ..strokeCap = StrokeCap.round,
       );
     }
 
@@ -268,9 +278,8 @@ class _RailPainter extends CustomPainter {
         isCurrent ? 14 : 11,
         Paint()
           ..color = (isCurrent ? AppColors.green : AppColors.cyan).withValues(
-            alpha: 0.25,
-          )
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+            alpha: 0.15,
+          ),
       );
     }
     canvas.drawCircle(c, 7, Paint()..color = AppColors.background);

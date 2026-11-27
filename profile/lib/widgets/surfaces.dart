@@ -40,20 +40,16 @@ class GlassPanel extends StatelessWidget {
                 )
                 : null,
         border: Border.all(color: borderColor ?? AppColors.border),
-        boxShadow: [
-          if (glow != null)
-            BoxShadow(
-              color: glow!.withValues(alpha: 0.18),
-              blurRadius: 40,
-              spreadRadius: -8,
-            ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.35),
-            blurRadius: 30,
-            offset: const Offset(0, 16),
-            spreadRadius: -12,
-          ),
-        ],
+        boxShadow:
+            glow == null
+                ? null
+                : [
+                  BoxShadow(
+                    color: glow!.withValues(alpha: 0.14),
+                    blurRadius: 24,
+                    spreadRadius: -8,
+                  ),
+                ],
       ),
       child: child,
     );

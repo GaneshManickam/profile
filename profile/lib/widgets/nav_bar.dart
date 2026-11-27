@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import '../core/motion.dart';
@@ -26,6 +24,9 @@ class NavBar extends StatelessWidget {
     final size = Breakpoints.of(context);
     final compact = size != ScreenSize.desktop;
     final reduce = Motion.reduced(context);
+    final barHeight = compact ? 54.0 : 60.0;
+    // Brand mark and trailing controls are 40 px tall.
+    final inset = (barHeight - 40) / 2;
 
     return SafeArea(
       bottom: false,
@@ -43,19 +44,22 @@ class NavBar extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(999),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+              child: SizedBox(
                 child: Container(
-                  height: compact ? 54 : 60,
+                  height: barHeight,
                   decoration: BoxDecoration(
-                    color: AppColors.background.withValues(alpha: 0.6),
+                    color: AppColors.background.withValues(alpha: 0.88),
                     borderRadius: BorderRadius.circular(999),
                     border: Border.all(color: AppColors.border),
                   ),
                   child: Stack(
+                    // Expand so the row below is centred vertically.
+                    fit: StackFit.expand,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8),
+                        // Equal inset on all sides keeps the round avatar
+                        // and menu button concentric with the pill's ends.
+                        padding: EdgeInsets.symmetric(horizontal: inset),
                         child: Row(
                           children: [
                             _Brand(
@@ -267,6 +271,9 @@ class _NavLinkState extends State<_NavLink> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // Mirrors the underline + gap below, so the label stays
+                // optically centred in the bar.
+                const SizedBox(height: 7.5),
                 AnimatedDefaultTextStyle(
                   duration: const Duration(milliseconds: 180),
                   style: AppText.body(

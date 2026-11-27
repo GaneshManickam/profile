@@ -192,9 +192,7 @@ class _LinePainter extends CustomPainter {
       canvas.drawCircle(
         Offset(px, y),
         6,
-        Paint()
-          ..color = AppColors.cyan.withValues(alpha: 0.35)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5),
+        Paint()..color = AppColors.cyan.withValues(alpha: 0.2),
       );
       canvas.drawCircle(Offset(px, y), 2.5, Paint()..color = Colors.white);
     }
@@ -798,13 +796,7 @@ class _FlowPainter extends CustomPainter {
       final down = Offset(x - 6, y0 + (y1 - y0) * f);
       final up = Offset(x + 6, y1 - (y1 - y0) * f);
       for (final (o, c) in [(down, AppColors.cyan), (up, AppColors.violet)]) {
-        canvas.drawCircle(
-          o,
-          6,
-          Paint()
-            ..color = c.withValues(alpha: 0.35)
-            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4),
-        );
+        canvas.drawCircle(o, 6, Paint()..color = c.withValues(alpha: 0.2));
         canvas.drawCircle(o, 2.4, Paint()..color = c);
       }
     }

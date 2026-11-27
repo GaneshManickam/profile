@@ -400,14 +400,12 @@ class _HeroScene extends StatelessWidget {
                       scope.scrollController.hasClients
                           ? scope.scrollController.offset
                           : 0.0;
-                  // Gentle scroll parallax: the scene drifts and fades as
-                  // the hero leaves the screen.
+                  // Gentle scroll parallax. Translate only: an Opacity here
+                  // would force an offscreen render of the whole 3D scene
+                  // on every scroll frame.
                   return Transform.translate(
                     offset: Offset(0, off * 0.18),
-                    child: Opacity(
-                      opacity: (1 - off / (height * 1.4)).clamp(0.0, 1.0),
-                      child: child,
-                    ),
+                    child: child,
                   );
                 },
                 child: Stack(
@@ -458,9 +456,17 @@ class _HeroScene extends StatelessWidget {
                     if (mobile)
                       Positioned(
                         bottom: 0,
-                        child: Text(
-                          '← drag to rotate →',
-                          style: AppText.mono(10.5),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.swipe_rounded,
+                              size: 14,
+                              color: AppColors.textTertiary,
+                            ),
+                            const SizedBox(width: 6),
+                            Text('drag to rotate', style: AppText.mono(10.5)),
+                          ],
                         ),
                       ),
                   ],
@@ -728,14 +734,10 @@ class _FloatingCard extends StatelessWidget {
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.5),
-            blurRadius: 30,
-            offset: const Offset(0, 18),
-            spreadRadius: -10,
-          ),
-          BoxShadow(
-            color: AppColors.cyan.withValues(alpha: 0.08),
-            blurRadius: 24,
+            color: Colors.black.withValues(alpha: 0.45),
+            blurRadius: 14,
+            offset: const Offset(0, 10),
+            spreadRadius: -6,
           ),
         ],
       ),

@@ -440,9 +440,23 @@ class _Footer extends StatelessWidget {
           spacing: 16,
           runSpacing: 16,
           children: [
-            Text(
-              '// built with Flutter & ❤️ by ${p.name} © ${DateTime.now().year}',
-              style: AppText.mono(12, color: AppColors.textTertiary),
+            Text.rich(
+              TextSpan(
+                style: AppText.mono(12, color: AppColors.textTertiary),
+                children: [
+                  const TextSpan(text: '// built with Flutter & '),
+                  const WidgetSpan(
+                    alignment: PlaceholderAlignment.middle,
+                    child: Icon(
+                      Icons.favorite_rounded,
+                      size: 13,
+                      color: AppColors.pink,
+                      semanticLabel: 'love',
+                    ),
+                  ),
+                  TextSpan(text: ' by ${p.name} © ${DateTime.now().year}'),
+                ],
+              ),
             ),
             TextButton.icon(
               onPressed:

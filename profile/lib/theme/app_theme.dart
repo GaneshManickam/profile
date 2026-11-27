@@ -42,13 +42,22 @@ class AppColors {
 }
 
 /// Typography: geometric display (Sora), neutral body (Inter), mono accents.
+///
+/// Every weight is a separate font file fetched at start-up, so weights are
+/// snapped to a small set: Sora 600/700, Inter 400/600, JetBrains Mono 500.
 class AppText {
   AppText._();
+
+  static FontWeight _sora(FontWeight? w) =>
+      (w ?? FontWeight.w600).value >= 700 ? FontWeight.w700 : FontWeight.w600;
+
+  static FontWeight _inter(FontWeight? w) =>
+      (w ?? FontWeight.w400).value >= 600 ? FontWeight.w600 : FontWeight.w400;
 
   static TextStyle display(double size, {Color? color, FontWeight? weight}) =>
       GoogleFonts.sora(
         fontSize: size,
-        fontWeight: weight ?? FontWeight.w700,
+        fontWeight: _sora(weight ?? FontWeight.w700),
         letterSpacing: -size * 0.035,
         height: 1.05,
         color: color ?? AppColors.textPrimary,
@@ -57,7 +66,7 @@ class AppText {
   static TextStyle title(double size, {Color? color, FontWeight? weight}) =>
       GoogleFonts.sora(
         fontSize: size,
-        fontWeight: weight ?? FontWeight.w600,
+        fontWeight: _sora(weight),
         letterSpacing: -size * 0.015,
         height: 1.25,
         color: color ?? AppColors.textPrimary,
@@ -70,7 +79,7 @@ class AppText {
     double height = 1.6,
   }) => GoogleFonts.inter(
     fontSize: size,
-    fontWeight: weight ?? FontWeight.w400,
+    fontWeight: _inter(weight),
     height: height,
     color: color ?? AppColors.textSecondary,
   );
@@ -82,7 +91,8 @@ class AppText {
     double letterSpacing = 0,
   }) => GoogleFonts.jetBrainsMono(
     fontSize: size,
-    fontWeight: weight ?? FontWeight.w500,
+    // One mono weight only; emphasis comes from colour.
+    fontWeight: FontWeight.w500,
     letterSpacing: letterSpacing,
     height: 1.4,
     color: color ?? AppColors.textTertiary,
@@ -133,7 +143,9 @@ ThemeData buildAppTheme() {
     highlightColor: Colors.transparent,
   );
   return base.copyWith(
-    textTheme: GoogleFonts.interTextTheme(base.textTheme),
+    // Point the default text theme at Inter (regular) without pulling in
+    // every weight the Material text theme declares.
+    textTheme: base.textTheme.apply(fontFamily: GoogleFonts.inter().fontFamily),
     tooltipTheme: TooltipThemeData(
       decoration: BoxDecoration(
         color: AppColors.surfaceHigh,

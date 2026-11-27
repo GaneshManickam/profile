@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../core/motion.dart';
-import '../core/page_scope.dart';
 import '../data/models.dart';
 import '../data/portfolio_data.dart';
 import '../theme/app_theme.dart';
@@ -192,7 +191,6 @@ class _CoverflowItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pointer = PageScope.of(context).pointer;
     final device = RepaintBoundary(
       child: PhoneFrame(
         width: phoneWidth,
@@ -200,13 +198,29 @@ class _CoverflowItem extends StatelessWidget {
         child:
             project.screenshots.isNotEmpty
                 ? Image.asset(project.screenshots.first, fit: BoxFit.cover)
-                : ProjectLaunchScreen(project: project),
+                : ProjectLaunchScreen(
+                  project: project,
+                  // Focused phone opens the store; a side phone slides into
+                  // focus first.
+                  onStoreTap: () {
+                    final page =
+                        controller.hasClients
+                            ? (controller.page ??
+                                controller.initialPage.toDouble())
+                            : controller.initialPage.toDouble();
+                    if (page.round() == index) {
+                      openExternal(context, project.url);
+                    } else {
+                      onTap();
+                    }
+                  },
+                ),
       ),
     );
     final edge = PhoneFrame.edge(phoneWidth);
 
     return AnimatedBuilder(
-      animation: Listenable.merge([controller, idle, pointer]),
+      animation: Listenable.merge([controller, idle]),
       builder: (context, _) {
         double page = index.toDouble();
         if (controller.hasClients && controller.position.hasContentDimensions) {
@@ -218,10 +232,8 @@ class _CoverflowItem extends StatelessWidget {
         final focus = (1 - delta.abs()).clamp(0.0, 1.0);
         final idleT = idle.value * 2 * math.pi;
 
-        final ry =
-            -delta * 0.62 +
-            focus * (math.sin(idleT) * 0.12 + pointer.value.dx * 0.18);
-        final rx = focus * (-0.04 - pointer.value.dy * 0.08);
+        final ry = -delta * 0.62 + focus * math.sin(idleT) * 0.14;
+        final rx = focus * -0.04;
         final scale = 1 - math.min(delta.abs(), 2) * 0.16;
         final depth = -delta.abs() * 120;
         final lift = focus * math.sin(idleT * 2) * 6;
@@ -245,29 +257,46 @@ class _CoverflowItem extends StatelessWidget {
             ),
         ];
 
-        return Opacity(
-          opacity: (1 - delta.abs() * 0.35).clamp(0.0, 1.0),
-          child: Center(
-            child: Semantics(
-              button: true,
-              label: '${project.title} — ${project.domain}',
-              excludeSemantics: true,
-              child: MouseRegion(
-                cursor:
-                    focus > 0.9 ? MouseCursor.defer : SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: onTap,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      ...slices,
-                      Transform(
-                        transform: m(0),
-                        alignment: Alignment.center,
-                        child: device,
+        final dim = (delta.abs() * 0.45).clamp(0.0, 0.7);
+        return Center(
+          child: Semantics(
+            button: true,
+            label: '${project.title} — ${project.domain}',
+            excludeSemantics: true,
+            child: MouseRegion(
+              cursor:
+                  focus > 0.9 ? MouseCursor.defer : SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: onTap,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    ...slices,
+                    Transform(
+                      transform: m(0),
+                      alignment: Alignment.center,
+                      child: device,
+                    ),
+                    if (dim > 0.01)
+                      IgnorePointer(
+                        child: Transform(
+                          transform: m(0),
+                          alignment: Alignment.center,
+                          child: Container(
+                            width: phoneWidth,
+                            height: PhoneFrame.heightFor(phoneWidth),
+                            decoration: BoxDecoration(
+                              color: AppColors.background.withValues(
+                                alpha: dim,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                phoneWidth * 0.17,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
+                  ],
                 ),
               ),
             ),

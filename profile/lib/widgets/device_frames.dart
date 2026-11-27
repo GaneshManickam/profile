@@ -46,12 +46,15 @@ class PhoneFrame extends StatelessWidget {
           ],
           stops: [0, 0.35, 0.7, 1],
         ),
+        // Tight shadow only; the large coloured halo is drawn by the scenes
+        // as a cheap radial gradient (big blurs under moving 3D transforms
+        // are re-rendered every frame).
         boxShadow: [
           if (glow != null)
             BoxShadow(
-              color: glow!.withValues(alpha: 0.35),
-              blurRadius: width * 0.5,
-              spreadRadius: -width * 0.08,
+              color: glow!.withValues(alpha: 0.25),
+              blurRadius: 16,
+              spreadRadius: -4,
             ),
         ],
       ),

@@ -315,9 +315,17 @@ class _DockIcon extends StatelessWidget {
 /// description, tinted with a colour from its domain. This deliberately
 /// isn't a fake screenshot.
 class ProjectLaunchScreen extends StatelessWidget {
-  const ProjectLaunchScreen({super.key, required this.project});
+  const ProjectLaunchScreen({
+    super.key,
+    required this.project,
+    this.onStoreTap,
+  });
 
   final Project project;
+
+  /// Called when the "Get it on …" button is tapped. When null the button
+  /// is purely decorative.
+  final VoidCallback? onStoreTap;
 
   @override
   Widget build(BuildContext context) {
@@ -393,36 +401,50 @@ class ProjectLaunchScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              Container(
-                margin: const EdgeInsets.fromLTRB(28, 0, 28, 14),
-                height: 46,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(23),
-                  color: c,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    platformIcon(
-                      project.platforms.last,
-                      size: 15,
-                      color: Colors.black,
-                    ),
-                    const SizedBox(width: 8),
-                    Flexible(
-                      child: Text(
-                        'Get it on ${project.storeLabel}',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppText.body(
-                          12.5,
-                          color: Colors.black,
-                          weight: FontWeight.w700,
-                        ),
+              Semantics(
+                button: onStoreTap != null,
+                label: 'Get ${project.title} on ${project.storeLabel}',
+                excludeSemantics: true,
+                child: MouseRegion(
+                  cursor:
+                      onStoreTap != null
+                          ? SystemMouseCursors.click
+                          : MouseCursor.defer,
+                  child: GestureDetector(
+                    onTap: onStoreTap,
+                    child: Container(
+                      margin: const EdgeInsets.fromLTRB(28, 0, 28, 14),
+                      height: 46,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(23),
+                        color: c,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          platformIcon(
+                            project.platforms.last,
+                            size: 15,
+                            color: Colors.black,
+                          ),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Text(
+                              'Get it on ${project.storeLabel}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppText.body(
+                                12.5,
+                                color: Colors.black,
+                                weight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
               // Home indicator
@@ -590,7 +612,7 @@ class ContactScreenUI extends StatelessWidget {
           const SizedBox(height: 14),
           Container(height: 1, color: Colors.white10),
           const SizedBox(height: 14),
-          const _Bubble(text: 'Hi there 👋', mine: false),
+          const _Bubble(text: 'Hi there!', mine: false),
           const _Bubble(
             text:
                 'Got an app idea, or a product that needs a senior mobile engineer?',

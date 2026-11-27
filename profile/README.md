@@ -93,6 +93,6 @@ git push origin gh-pages
 ```
 
 The script runs analysis and tests, then builds with
-`flutter build web --release --base-href /profile/`. It copies the output into
+`flutter build web --release --wasm --base-href /profile/`. It copies the output into
 the `gh-pages` branch through a temporary worktree and commits it, but doesn't
 push.

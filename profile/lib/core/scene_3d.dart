@@ -182,7 +182,9 @@ class _Scene3DState extends State<Scene3D> with SingleTickerProviderStateMixin {
               child: Transform(
                 transform: matrixAt(0),
                 alignment: Alignment.center,
-                child: node.child,
+                // Cache the node's drawing; only its transform changes
+                // from frame to frame.
+                child: RepaintBoundary(child: node.child),
               ),
             ),
           );

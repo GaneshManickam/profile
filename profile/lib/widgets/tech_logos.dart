@@ -243,10 +243,10 @@ class LogoBadge extends StatelessWidget {
         border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
         boxShadow: [
           BoxShadow(
-            color: (glow ?? gradient.last).withValues(alpha: 0.45),
-            blurRadius: size * 0.6,
-            spreadRadius: -size * 0.15,
-            offset: Offset(0, size * 0.18),
+            color: (glow ?? gradient.last).withValues(alpha: 0.4),
+            blurRadius: size * 0.25,
+            spreadRadius: -size * 0.08,
+            offset: Offset(0, size * 0.12),
           ),
         ],
       ),

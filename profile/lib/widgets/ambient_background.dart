@@ -1,23 +1,89 @@
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
 import '../core/motion.dart';
 import '../theme/app_theme.dart';
 
-/// Fixed backdrop: drifting aurora light, a faint dot grid and slow
-/// particles. Painted on a single canvas with one controller, isolated in a
-/// [RepaintBoundary] so it never forces the content to repaint.
-class AmbientBackground extends StatefulWidget {
+/// Fixed backdrop: soft aurora light, a faint dot grid and slow particles.
+///
+/// Performance notes: the aurora + grid are static and painted once into
+/// their own layer (they never repaint while scrolling). Only the small
+/// particle layer animates, drawn with a single `drawPoints` call per colour.
+class AmbientBackground extends StatelessWidget {
   const AmbientBackground({super.key, required this.scroll});
 
+  /// Kept for API compatibility; the backdrop no longer reacts to scroll so
+  /// it never has to repaint while the page moves.
   final ScrollController scroll;
 
   @override
-  State<AmbientBackground> createState() => _AmbientBackgroundState();
+  Widget build(BuildContext context) {
+    return const Stack(
+      fit: StackFit.expand,
+      children: [
+        RepaintBoundary(child: CustomPaint(painter: _StaticBackdropPainter())),
+        RepaintBoundary(child: _Particles()),
+      ],
+    );
+  }
 }
 
-class _AmbientBackgroundState extends State<AmbientBackground>
+class _StaticBackdropPainter extends CustomPainter {
+  const _StaticBackdropPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawRect(Offset.zero & size, Paint()..color = AppColors.background);
+
+    void orb(Offset c, double r, Color color, double alpha) {
+      canvas.drawRect(
+        Offset.zero & size,
+        Paint()
+          ..shader = RadialGradient(
+            colors: [
+              color.withValues(alpha: alpha),
+              color.withValues(alpha: 0),
+            ],
+          ).createShader(Rect.fromCircle(center: c, radius: r)),
+      );
+    }
+
+    final w = size.width;
+    final h = size.height;
+    final r = math.max(w, h);
+    orb(Offset(w * 0.8, h * 0.15), r * 0.45, AppColors.cyan, 0.08);
+    orb(Offset(w * 0.1, h * 0.75), r * 0.5, AppColors.violet, 0.09);
+
+    // Dot grid in a single draw call.
+    const spacing = 44.0;
+    final points = <Offset>[
+      for (double x = spacing / 2; x < w; x += spacing)
+        for (double y = spacing / 2; y < h; y += spacing) Offset(x, y),
+    ];
+    canvas.drawPoints(
+      ui.PointMode.points,
+      points,
+      Paint()
+        ..color = Colors.white.withValues(alpha: 0.035)
+        ..strokeWidth = 1.6
+        ..strokeCap = StrokeCap.round,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _Particles extends StatefulWidget {
+  const _Particles();
+
+  @override
+  State<_Particles> createState() => _ParticlesState();
+}
+
+class _ParticlesState extends State<_Particles>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
@@ -29,7 +95,7 @@ class _AmbientBackgroundState extends State<AmbientBackground>
   void didChangeDependencies() {
     super.didChangeDependencies();
     final mobile = Breakpoints.of(context) == ScreenSize.mobile;
-    final count = mobile ? 22 : 48;
+    final count = mobile ? 16 : 36;
     if (_particles.length != count) {
       final rnd = math.Random(42);
       _particles = List.generate(
@@ -37,10 +103,9 @@ class _AmbientBackgroundState extends State<AmbientBackground>
         (_) => _Particle(
           x: rnd.nextDouble(),
           y: rnd.nextDouble(),
-          radius: 0.6 + rnd.nextDouble() * 1.4,
           speed: 0.2 + rnd.nextDouble() * 0.8,
           phase: rnd.nextDouble() * math.pi * 2,
-          tint: rnd.nextDouble() < 0.5 ? AppColors.cyan : AppColors.violet,
+          cyan: rnd.nextBool(),
         ),
       );
     }
@@ -59,15 +124,9 @@ class _AmbientBackgroundState extends State<AmbientBackground>
 
   @override
   Widget build(BuildContext context) {
-    return RepaintBoundary(
-      child: CustomPaint(
-        painter: _AmbientPainter(
-          time: _controller,
-          scroll: widget.scroll,
-          particles: _particles,
-        ),
-        child: const SizedBox.expand(),
-      ),
+    return CustomPaint(
+      painter: _ParticlePainter(time: _controller, particles: _particles),
+      child: const SizedBox.expand(),
     );
   }
 }
@@ -76,98 +135,48 @@ class _Particle {
   const _Particle({
     required this.x,
     required this.y,
-    required this.radius,
     required this.speed,
     required this.phase,
-    required this.tint,
+    required this.cyan,
   });
 
   final double x;
   final double y;
-  final double radius;
   final double speed;
   final double phase;
-  final Color tint;
+  final bool cyan;
 }
 
-class _AmbientPainter extends CustomPainter {
-  _AmbientPainter({
-    required this.time,
-    required this.scroll,
-    required this.particles,
-  }) : super(repaint: Listenable.merge([time, scroll]));
+class _ParticlePainter extends CustomPainter {
+  _ParticlePainter({required this.time, required this.particles})
+    : super(repaint: time);
 
   final Animation<double> time;
-  final ScrollController scroll;
   final List<_Particle> particles;
-
-  double get _scrollOffset =>
-      scroll.hasClients && scroll.positions.length == 1 ? scroll.offset : 0;
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawRect(Offset.zero & size, Paint()..color = AppColors.background);
-
     final t = time.value * 2 * math.pi;
-    final s = _scrollOffset;
-
-    void orb(Offset c, double r, Color color, double alpha) {
-      canvas.drawCircle(
-        c,
-        r,
-        Paint()
-          ..shader = RadialGradient(
-            colors: [
-              color.withValues(alpha: alpha),
-              color.withValues(alpha: 0),
-            ],
-          ).createShader(Rect.fromCircle(center: c, radius: r)),
-      );
-    }
-
-    final w = size.width;
-    final h = size.height;
-    orb(
-      Offset(
-        w * 0.78 + math.sin(t) * 60,
-        h * 0.18 + math.cos(t) * 40 - s * 0.08 % h,
-      ),
-      math.max(w, h) * 0.45,
-      AppColors.cyan,
-      0.09,
-    );
-    orb(
-      Offset(w * 0.12 + math.cos(t * 2) * 50, h * 0.7 + math.sin(t) * 50),
-      math.max(w, h) * 0.5,
-      AppColors.violet,
-      0.10,
-    );
-
-    // Dot grid, parallaxing slightly with scroll.
-    const spacing = 44.0;
-    final grid = Paint()..color = Colors.white.withValues(alpha: 0.035);
-    final dy = -(s * 0.15) % spacing;
-    for (double x = spacing / 2; x < w; x += spacing) {
-      for (double y = dy; y < h; y += spacing) {
-        canvas.drawCircle(Offset(x, y), 0.8, grid);
-      }
-    }
-
-    // Particles drifting upward with a gentle twinkle.
+    final cyan = <Offset>[];
+    final violet = <Offset>[];
     for (final p in particles) {
-      final travel = (p.y - time.value * p.speed - s * 0.0002 * p.speed) % 1.0;
-      final x = p.x * w + math.sin(t * 3 + p.phase) * 12;
-      final y = travel * h;
-      final alpha = 0.25 + 0.35 * (0.5 + 0.5 * math.sin(t * 6 + p.phase));
-      canvas.drawCircle(
-        Offset(x, y),
-        p.radius,
-        Paint()..color = p.tint.withValues(alpha: alpha),
+      final travel = (p.y - time.value * p.speed) % 1.0;
+      final o = Offset(
+        p.x * size.width + math.sin(t * 3 + p.phase) * 12,
+        travel * size.height,
       );
+      (p.cyan ? cyan : violet).add(o);
     }
+    Paint dot(Color c) =>
+        Paint()
+          ..color = c.withValues(alpha: 0.45)
+          ..strokeWidth = 2.4
+          ..strokeCap = StrokeCap.round;
+    canvas.drawPoints(ui.PointMode.points, cyan, dot(AppColors.cyan));
+    canvas.drawPoints(ui.PointMode.points, violet, dot(AppColors.violet));
   }
 
   @override
-  bool shouldRepaint(covariant _AmbientPainter old) =>
+  bool shouldRepaint(covariant _ParticlePainter old) =>
       old.particles != particles;
 }
